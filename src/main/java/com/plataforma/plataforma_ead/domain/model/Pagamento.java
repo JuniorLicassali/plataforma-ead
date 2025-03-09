@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,8 +27,9 @@ public class Pagamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
-	private Long matriculaId;
+	@ManyToOne
+	@JoinColumn(name = "matricula_id", nullable = false)
+	private Matricula matricula;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")

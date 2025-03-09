@@ -1,17 +1,23 @@
 package com.plataforma.plataforma_ead.domain.model;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,12 +40,16 @@ public class Usuario {
 	@Column(nullable = false)
 	private String senha;
 	
-	private List<Matricula> matriculas;
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	private List<Matricula> matriculas = new ArrayList<>();
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "dateTime")
 	private OffsetDateTime dataCadastro;
 	
+	@ManyToMany
+	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"),
+				inverseJoinColumns = @JoinColumn(name = "grupo_id"))
 	private Set<Grupo> grupos = new HashSet<>();
 	
 	public boolean senhaCoincideCom(String senha) {

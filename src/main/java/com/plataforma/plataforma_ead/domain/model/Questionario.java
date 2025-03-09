@@ -6,11 +6,15 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,7 +35,11 @@ public class Questionario {
 	private OffsetDateTime dataAbertura;
 	private OffsetDateTime dataFechamento;
 	
+	@OneToMany(mappedBy = "questionario", cascade = CascadeType.ALL)
 	private List<Pergunta> perguntas = new ArrayList<>();
 	
+	@OneToOne
+    @JoinColumn(name = "curso_id", nullable = false)
+    private Curso curso;
 	
 }
