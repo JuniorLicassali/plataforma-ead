@@ -24,6 +24,20 @@ public class CadastroCursoService {
 		cursoRepository.deleteById(cursoId);
 	}
 	
+	@Transactional
+	public void ativar(Long cursoId) {
+		Curso cursoAtual = buscarOuFalhar(cursoId);
+		
+		cursoAtual.ativar();
+	}
+
+	@Transactional
+	public void inativar(Long cursoId) {
+		Curso cursoAtual = buscarOuFalhar(cursoId);
+		
+		cursoAtual.inativar();
+	}
+	
 	public Curso buscarOuFalhar(Long cursoId) {
 		return cursoRepository.findById(cursoId).orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
 	}

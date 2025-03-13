@@ -31,13 +31,16 @@ public class Curso {
 	private Long id;
 	
 	@Column(nullable = false)
+	private String nome;
+	
+	@Column(nullable = false)
 	private String descricao;
 	
 	@Column(nullable = false)
 	private BigDecimal preco;
 	
 	@Column(nullable = false)
-	private Boolean ativo;
+	private Boolean ativo = Boolean.TRUE;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -51,5 +54,13 @@ public class Curso {
 	
 	@OneToOne(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Questionario questionario;
+	
+	public void ativar() {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}
 	
 }

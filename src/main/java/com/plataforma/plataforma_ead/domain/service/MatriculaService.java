@@ -1,5 +1,7 @@
 package com.plataforma.plataforma_ead.domain.service;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +29,10 @@ public class MatriculaService {
         matricula.setUsuario(usuario);
         matricula.setCurso(curso);
         matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_PENDENTE);
+        matricula.setDataMatricula(OffsetDateTime.now());
         
         usuario.getMatriculas().add(matricula);
-        usuarioRepository.save(usuario);
+        usuarioRepository.flush();
 
         return matricula;
     }
