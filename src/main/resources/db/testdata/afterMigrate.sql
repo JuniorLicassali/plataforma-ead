@@ -7,7 +7,7 @@ delete from usuario;
 delete from usuario_grupo;
 delete from pagamento;
 delete from matricula;
-delete from pergunta_opcoes;
+delete from pergunta_opcao;
 delete from pergunta;
 delete from questionario;
 delete from curso;
@@ -20,7 +20,7 @@ alter table matricula auto_increment = 1;
 alter table pagamento auto_increment = 1;
 alter table questionario auto_increment = 1;
 alter table pergunta auto_increment = 1;
-alter table pergunta_opcoes auto_increment = 1;
+alter table pergunta_opcao auto_increment = 1;
 
 
 insert into permissao (id, nome, descricao) values (1, 'COMPRAR_CURSOS', 'Permite que usuários comprem cursos');
@@ -66,3 +66,10 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 (7, 'Carlos Lima', 'email.teste.fb+carlos@gmail.com', '123', utc_timestamp);
 
 insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2), (3, 3), (4, 4);
+
+insert into curso (id, nome, descricao, preco, ativo, data_criacao) values (1, "Administração", "Curso voltado para a area...", 500.00, 1, utc_timestamp);
+insert into curso (id, nome, descricao, preco, ativo, data_criacao) values (2, "Contabilidade", "Curso voltado para a area...", 500.00, 1, utc_timestamp);
+insert into curso (id, nome, descricao, preco, ativo, data_criacao) values (3, "Gestão de Negócios", "Curso voltado para a area...", 500.00, 1, utc_timestamp);
+
+
+

@@ -24,6 +24,13 @@ public class MatriculaService {
     public Matricula matricularUsuario(Long usuarioId, Curso curso) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+        
+        boolean usuarioJaMatriculado = usuario.getMatriculas().stream()
+                .anyMatch(matricula -> matricula.getCurso().getId().equals(curso.getId()));
+        
+        if (usuarioJaMatriculado) {
+            throw new IllegalStateException("O usuário já está matriculado neste curso.");
+        }
 
         Matricula matricula = new Matricula();
         matricula.setUsuario(usuario);
@@ -32,7 +39,7 @@ public class MatriculaService {
         matricula.setDataMatricula(OffsetDateTime.now());
         
         usuario.getMatriculas().add(matricula);
-        usuarioRepository.flush();
+//        usuarioRepository.flush();
 
         return matricula;
     }

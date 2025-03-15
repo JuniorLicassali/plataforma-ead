@@ -10,7 +10,7 @@ public class MatriculaInput {
 //	private UsuarioIdInput usuario;
 //	private CursoIdInput curso;
 	
-//	private Long usuarioId;
+	private Long usuarioId;
     private Long cursoId; 
 	
 }

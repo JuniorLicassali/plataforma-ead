@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,11 +31,9 @@ public class Pergunta {
 	@Column(nullable = false)
 	private String enunciado;
 	
-	@Column(nullable = false)
-	private List<String> opcoes = new ArrayList<>();
-	
-	@Column(nullable = false)
-	private String respostaCorreta;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL)
+	private List<PerguntaOpcao> opcoes = new ArrayList<>();
 	
 	@ManyToOne
     @JoinColumn(name = "questionario_id", nullable = false)
@@ -40,8 +42,13 @@ public class Pergunta {
     public void embaralharOpcoes() {
         Collections.shuffle(opcoes);
     }
-
-    public boolean verificarResposta(String resposta) {
-        return respostaCorreta.equals(resposta);
+    
+    public boolean verificarResposta(String opcaoEscolhida) {
+        for (PerguntaOpcao opcao : opcoes) {
+            if (opcao.getTexto().equals(opcaoEscolhida) && opcao.getIsCorreta()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

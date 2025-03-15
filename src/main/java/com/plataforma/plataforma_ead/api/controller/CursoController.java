@@ -25,7 +25,7 @@ import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
 
 @RestController
-@RequestMapping(path = "/curso", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CursoController {
 	
 	@Autowired

@@ -28,10 +28,10 @@ public class Questionario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	private String descricao;
-	private Boolean ativo;
+	private Boolean ativo = Boolean.TRUE;
 	
-	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
+//	@CreationTimestamp
+//	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataAbertura;
 	private OffsetDateTime dataFechamento;
 	

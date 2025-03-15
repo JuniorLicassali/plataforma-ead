@@ -2,8 +2,8 @@ package com.plataforma.plataforma_ead.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -50,7 +50,7 @@ public class Curso {
 	private OffsetDateTime dataAtualizacao;
 	
 	@OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
-	private List<Matricula> matriculas = new ArrayList<>();
+	private Set<Matricula> matriculas = new HashSet<>();
 	
 	@OneToOne(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Questionario questionario;

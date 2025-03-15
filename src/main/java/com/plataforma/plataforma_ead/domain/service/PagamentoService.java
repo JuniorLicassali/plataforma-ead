@@ -27,10 +27,18 @@ public class PagamentoService {
 	public Pagamento criarPagamento(Long usuarioId, Long cursoId, MetodoPagamento metodoPagamento) {
 		
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		
 		Matricula matricula = usuario.getMatriculas().stream()
 				.filter(m -> m.getCurso().getId().equals(cursoId) && m.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE)
 				.findFirst()
 		        .orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso: " + cursoId));
+		
+		boolean pagamentoExistente = matricula.getPagamentos().stream()
+		        .anyMatch(p -> p.getStatusPagamento() == StatusPagamento.PAGAMENTO_PENDENTE);
+		
+		 if (pagamentoExistente) {
+		        throw new IllegalStateException("Já existe um pagamento pendente para esta matrícula.");
+		 }
 		
 		Pagamento pagamento = new Pagamento();
 		pagamento.setMatricula(matricula);
@@ -53,6 +61,15 @@ public class PagamentoService {
 		
 		if(pagamento.getStatusPagamento() == StatusPagamento.PAGAMENTO_PENDENTE) {
 			pagamento.setStatusPagamento(StatusPagamento.PAGAMENTO_CONCLUIDO);
+			
+			Matricula matricula = pagamento.getMatricula();
+			
+			if(matricula !=null && matricula.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE) {
+				matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
+				
+				usuarioService.salvar(matricula.getUsuario());
+			}
+			
 		} else {
 			throw new IllegalStateException("O pagamento já está concluído.");
 		}

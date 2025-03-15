@@ -1,9 +1,7 @@
 package com.plataforma.plataforma_ead.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,7 +39,7 @@ public class Usuario {
 	private String senha;
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-	private List<Matricula> matriculas = new ArrayList<>();
+	private Set<Matricula> matriculas = new HashSet<>();
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "dateTime")

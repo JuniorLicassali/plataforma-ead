@@ -51,7 +51,6 @@ create table questionario (
 create table pergunta (
 	id bigint not null auto_increment,
     enunciado text not null,
-    resposta_correta text not null,
     questionario_id bigint not null,
     
     primary key (id),
@@ -59,10 +58,14 @@ create table pergunta (
 	constraint fk_pergunta_questionario foreign key (questionario_id) references questionario(id)
 ) engine=InnoDB default charset=utf8;
 
-create table pergunta_opcoes (
-	pergunta_id bigint not null,
-    opcoes text,
+create table pergunta_opcao (
+	id bigint not null auto_increment,
+	texto text not null,
+    pergunta_id bigint not null,
+    is_correta boolean not null,
     
-    constraint fk_pergunta_opcoes_pergunta foreign key (pergunta_id) references pergunta(id)
+    primary key (id),
+    
+    constraint fk_pergunta_opcao_pergunta foreign key (pergunta_id) references pergunta(id)
 ) engine=InnoDB default charset=utf8;
 
