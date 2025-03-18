@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -47,5 +48,8 @@ public class Matricula {
 	@ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
 	private Curso curso;
+	
+	@OneToOne(mappedBy = "matricula", cascade = CascadeType.ALL)
+    private QuestionarioUsuario questionarioUsuario;
 	
 }

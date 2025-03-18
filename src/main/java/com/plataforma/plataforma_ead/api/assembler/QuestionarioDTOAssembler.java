@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
+import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 
 @Component
 public class QuestionarioDTOAssembler {
@@ -18,6 +19,10 @@ public class QuestionarioDTOAssembler {
 	private ModelMapper modelMapper;
 	
 	public QuestionarioDTO toDTO(Questionario questionario) {
+		return modelMapper.map(questionario, QuestionarioDTO.class);
+	}
+	
+	public QuestionarioDTO toDTO(QuestionarioUsuario questionario) {
 		return modelMapper.map(questionario, QuestionarioDTO.class);
 	}
 	

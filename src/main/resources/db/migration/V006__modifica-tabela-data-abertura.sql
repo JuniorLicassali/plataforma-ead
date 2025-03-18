@@ -1,0 +1,1 @@
+alter table questionario modify column data_abertura datetime null;

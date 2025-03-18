@@ -10,6 +10,7 @@ delete from matricula;
 delete from pergunta_opcao;
 delete from pergunta;
 delete from questionario;
+delete from questionario_usuario;
 delete from curso;
 
 set foreign_key_checks = 1;

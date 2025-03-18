@@ -18,13 +18,14 @@ import com.plataforma.plataforma_ead.api.assembler.QuestionarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
 import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
+import com.plataforma.plataforma_ead.api.dto.input.IdUsuarioAbrirQestionarioTesteInput;
 import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
 import com.plataforma.plataforma_ead.api.dto.input.QuestionarioInput;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
 import com.plataforma.plataforma_ead.domain.model.PerguntaOpcao;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
-import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
+import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.service.CadastroQuestionarioService;
 
 @RestController
@@ -38,25 +39,38 @@ public class QuestionarioController {
 	private QuestionarioDTOAssembler questionarioDTOAssembler;
 	
 	@Autowired
-	private CadastroCursoService cursoService;
-	
-	@Autowired
 	private QuestionarioInputDisassembler questionarioInputDisassembler;
 	
+	@GetMapping("/{questionarioId}")
+	public QuestionarioDTO buscar(@PathVariable Long cursoId, @PathVariable Long questionarioId) {
+		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
+		
+		return questionarioDTO;
+	}
+	
 //	@GetMapping
-//	public QuestionarioDTO buscar(@PathVariable Long cursoId) {
-//		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.criarOuObterQuestionario(cursoId));
+//    public QuestionarioDTO abrirQuestionario(@PathVariable Long cursoId) {
+//
+////        QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
+//		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.abrirQuestionario(cursoId));
 //		
-//		return questionarioDTO;
-//	}
+//        return questionarioDTO;
+//    }
+	
 	
 	@GetMapping
-    public QuestionarioDTO abrirQuestionario(@PathVariable Long cursoId) {
+	public QuestionarioDTO abrirQuestionario(@PathVariable Long cursoId, @RequestBody IdUsuarioAbrirQestionarioTesteInput usuarioId) {
 
-        QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
-
-        return questionarioDTO;
-    }
+//      QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
+		
+		QuestionarioUsuario questionarioUsuario = questionarioService.iniciarQuestionario(cursoId, usuarioId.getUsuarioId());
+		
+		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioUsuario);
+		
+		
+		
+      return questionarioDTO;
+	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

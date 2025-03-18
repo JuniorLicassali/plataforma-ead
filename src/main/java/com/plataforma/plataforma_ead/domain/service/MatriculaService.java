@@ -1,6 +1,7 @@
 package com.plataforma.plataforma_ead.domain.service;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,16 @@ public class MatriculaService {
 
         return matricula;
     }
+	
+	public boolean isUsuarioMatriculado(Long usuarioId, Long cursoId) {
+		Usuario usuario = usuarioRepository.findById(usuarioId)
+	            .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+		
+		boolean usuarioMatriculado = usuario.getMatriculas().stream()
+				.anyMatch(matricula -> matricula.getStatusMatricula().equals(StatusMatricula.PAGAMENTO_CONFIRMADO));
+		
+		return usuarioMatriculado;
+	}
 	
 	@Transactional
     public void confirmarMatricula(Matricula matricula) {
