@@ -13,6 +13,7 @@ import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
 import com.plataforma.plataforma_ead.domain.exception.CursoNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
+import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.exception.QuestionarioExpiradoException;
 import com.plataforma.plataforma_ead.domain.exception.QuestionarioNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.exception.QuestionarioUsuarioDuplicadoException;
@@ -69,7 +70,7 @@ public class CadastroQuestionarioService {
 		Questionario questionario = curso.getQuestionario();
 
 		if (questionario == null) {
-			throw new IllegalStateException("O curso ainda não tem um questionário.");
+			throw new NegocioException("O curso ainda não tem um questionário.");
 		}
 
 		pergunta.setQuestionario(questionario);
@@ -93,7 +94,7 @@ public class CadastroQuestionarioService {
 		OffsetDateTime horarioAtual = OffsetDateTime.now();
 		
 		if(questionario.getDataFechamento() != null && horarioAtual.isAfter(questionario.getDataFechamento())) {
-			throw new RuntimeException("Tempo esgotado! Você não pode mais acessar este questionário.");
+			throw new QuestionarioExpiradoException("Tempo esgotado! Você não pode mais acessar este questionário.");
 		}
 		
 		if(questionario.getDataAbertura() == null) {
@@ -105,6 +106,9 @@ public class CadastroQuestionarioService {
 		return questionario;
 	}
 	
+	
+	
+	@Transactional
 	public QuestionarioUsuario iniciarQuestionario(Long cursoId, Long usuarioId) {
         Curso curso = cursoRepository.findById(cursoId).orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
         
@@ -113,11 +117,7 @@ public class CadastroQuestionarioService {
         Matricula matricula = Optional.ofNullable(usuarioRepository.findByCursoAndUsuario(curso, usuario))
         		.orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso e usuário"));
         
-        QuestionarioUsuario questionarioUsuarioExistente = curso.getQuestionario().getQuestionariosUsuarios().stream()
-//                .filter(q -> q.getMatricula().equals(matricula))
-        		.filter(q -> q.getMatricula().getId().equals(matricula.getId()))
-                .findFirst()
-                .orElse(null);
+        QuestionarioUsuario questionarioUsuarioExistente = buscarQuestionarioExistente(curso, matricula);
         
         if(questionarioUsuarioExistente != null) {
         	if(isQuestionarioExpirado(questionarioUsuarioExistente)){
@@ -126,7 +126,21 @@ public class CadastroQuestionarioService {
         	return questionarioUsuarioExistente;
         }
         
-        Questionario questionario = buscarOuFalhar(cursoId);
+        QuestionarioUsuario novoQuestionario = criarNovoQuestionarioUsuario(curso, matricula);
+        persistirQuestionarioUsuario(curso, novoQuestionario);
+        
+        return recuperarQuestionarioPersistido(curso, matricula);
+    }
+
+	private QuestionarioUsuario buscarQuestionarioExistente(Curso curso, Matricula matricula) {
+		return curso.getQuestionario().getQuestionariosUsuarios().stream()
+				.filter(q -> q.getMatricula().getId().equals(matricula.getId()))
+				.findFirst()
+				.orElse(null);
+	}
+	
+	private QuestionarioUsuario criarNovoQuestionarioUsuario(Curso curso, Matricula matricula) {
+		Questionario questionario = buscarOuFalhar(curso.getId());
 
         QuestionarioUsuario questionarioUsuario = new QuestionarioUsuario();
         questionarioUsuario.setMatricula(matricula);
@@ -134,36 +148,74 @@ public class CadastroQuestionarioService {
         questionarioUsuario.setDataAbertura(OffsetDateTime.now());
         questionarioUsuario.setDataFechamento(OffsetDateTime.now().plusMinutes(1));
         
-        curso.getQuestionario().getQuestionariosUsuarios().add(questionarioUsuario);
-        
+        return questionarioUsuario;
+	}
+	
+	private void persistirQuestionarioUsuario(Curso curso, QuestionarioUsuario questionarioUsuario) {
+		curso.getQuestionario().getQuestionariosUsuarios().add(questionarioUsuario);
         try {
-        	cursoRepository.save(curso);
+        	cursoRepository.saveAndFlush(curso);
 		} catch (DataIntegrityViolationException e) {
-//			if(questionarioUsuarioExistente != null ) {
-//				return questionarioUsuarioExistente;
-//			}
 			throw new QuestionarioUsuarioDuplicadoException("Já existe um questionário associado a essa matrícula para o questionário informado.");
 		}
-
-        return questionarioUsuario;
+	}
+	
+	private QuestionarioUsuario recuperarQuestionarioPersistido(Curso curso, Matricula matricula) {
+		return curso.getQuestionario().getQuestionariosUsuarios().stream()
+				.filter(q -> q.getMatricula().getId().equals(matricula.getId()))
+				.findFirst()
+				.orElseThrow(() -> new QuestionarioNaoEncontradoException("Erro ao recuperar o questionario"));
+	}
+	
+	private boolean isQuestionarioExpirado(QuestionarioUsuario questionarioUsuario) {
+		return questionarioUsuario.getDataFechamento().isBefore(OffsetDateTime.now());
+	}
+	
+	private Matricula buscarMatriculaDoUsuario(Curso curso, Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+        return Optional.ofNullable(usuarioRepository.findByCursoAndUsuario(curso, usuario))
+                .orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso e usuário"));
     }
-
-	public List<RespostaDTO> verificarRespostas(Long cursoId, Long questionarioId, List<RespostaInput> respostasInput)
+	
+	private QuestionarioUsuario buscarQuestionarioUsuario(Curso curso, Matricula matricula, Long questionarioId) {
+        return curso.getQuestionario().getQuestionariosUsuarios().stream()
+                .filter(q -> q.getMatricula().getId().equals(matricula.getId())
+                        && q.getQuestionario().getId().equals(questionarioId))
+                .findFirst()
+                .orElseThrow(() -> new QuestionarioNaoEncontradoException("Questionário do usuário não encontrado"));
+    }
+	
+	
+	
+	
+	public List<RespostaDTO> verificarRespostas(Long cursoId, Long questionarioId, Long usuarioId, List<RespostaInput> respostasInput)
 			throws Exception {
 
 		Curso curso = cursoRepository.findById(cursoId)
 				.orElseThrow(() -> new CursoNaoEncontradoException("Curso não encontrado"));
 
 		Questionario questionario = curso.getQuestionario();
+		
 		if (questionario == null) {
 			throw new QuestionarioNaoEncontradoException("O curso não tem um questionário.");
 		}
+		
+		Matricula matricula = buscarMatriculaDoUsuario(curso, usuarioId);
+		QuestionarioUsuario questionarioUsuario = buscarQuestionarioUsuario(curso, matricula, questionarioId);
 
+		if (questionarioUsuario.getFinalizado() == Boolean.TRUE) {
+            throw new QuestionarioExpiradoException("O questionário já foi finalizado.");
+        }
+		
 		List<RespostaDTO> resultados = new ArrayList<>();
+		int acertos = 0;
+		int totalPerguntas = questionario.getPerguntas().size();
 
 		for (RespostaInput respostaInput : respostasInput) {
 			Pergunta pergunta = questionario.getPerguntas().stream()
-					.filter(p -> p.getId().equals(respostaInput.getPerguntaId())).findFirst()
+					.filter(p -> p.getId().equals(respostaInput.getPerguntaId()))
+					.findFirst()
 					.orElseThrow(() -> new Exception("Pergunta não encontrada"));
 
 			boolean respostaCorreta = pergunta.verificarResposta(respostaInput.getResposta());
@@ -174,14 +226,21 @@ public class CadastroQuestionarioService {
 			respostaDTO.setIsCorreta(respostaCorreta);
 
 			resultados.add(respostaDTO);
+			
+			if (respostaCorreta) {
+                acertos++;
+            }
 		}
+		
+		double nota = (totalPerguntas > 0) ? ((double) acertos / totalPerguntas) * 10 : 0;
+		questionarioUsuario.setNota(nota);
+		questionarioUsuario.setFinalizado(Boolean.TRUE);
 
+		cursoRepository.save(curso);
+		
 		return resultados;
 	}
 	
-	private boolean isQuestionarioExpirado(QuestionarioUsuario questionarioUsuario) {
-		return questionarioUsuario.getDataFechamento().isBefore(OffsetDateTime.now());
-	}
 
 	public Questionario buscarOuFalhar(Long cursoId) {
 		return cursoRepository.findQuestionarioById(cursoId)

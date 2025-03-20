@@ -26,9 +26,6 @@ public class Questionario {
 	private Long id; 
 	private String descricao;
 	private Boolean ativo = Boolean.TRUE;
-	
-//	@CreationTimestamp
-//	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataAbertura;
 	private OffsetDateTime dataFechamento;
 	

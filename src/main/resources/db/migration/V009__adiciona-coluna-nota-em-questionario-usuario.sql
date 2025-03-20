@@ -1,0 +1,1 @@
+alter table questionario_usuario add column nota decimal(4,2);

@@ -51,7 +51,9 @@ public class PagamentoService {
 		* 
 		*/
 		
-		return pagamentoRepository.save(pagamento);
+		pagamento = pagamentoRepository.saveAndFlush(pagamento);
+		
+		return pagamento;
 	}
 
 	

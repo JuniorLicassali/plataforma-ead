@@ -20,6 +20,7 @@ alter table curso auto_increment = 1;
 alter table matricula auto_increment = 1;
 alter table pagamento auto_increment = 1;
 alter table questionario auto_increment = 1;
+alter table questionario_usuario auto_increment = 1;
 alter table pergunta auto_increment = 1;
 alter table pergunta_opcao auto_increment = 1;
 

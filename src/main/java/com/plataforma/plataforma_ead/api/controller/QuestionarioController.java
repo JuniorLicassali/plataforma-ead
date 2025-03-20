@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioInputDisassembler;
+import com.plataforma.plataforma_ead.api.assembler.QuestionarioUsuarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
+import com.plataforma.plataforma_ead.api.dto.QuestionarioUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
 import com.plataforma.plataforma_ead.api.dto.input.IdUsuarioAbrirQestionarioTesteInput;
 import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
@@ -41,6 +44,9 @@ public class QuestionarioController {
 	@Autowired
 	private QuestionarioInputDisassembler questionarioInputDisassembler;
 	
+	@Autowired
+	private QuestionarioUsuarioDTOAssembler questionarioUsuarioAssembler;
+	
 	@GetMapping("/{questionarioId}")
 	public QuestionarioDTO buscar(@PathVariable Long cursoId, @PathVariable Long questionarioId) {
 		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
@@ -48,28 +54,12 @@ public class QuestionarioController {
 		return questionarioDTO;
 	}
 	
-//	@GetMapping
-//    public QuestionarioDTO abrirQuestionario(@PathVariable Long cursoId) {
-//
-////        QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
-//		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.abrirQuestionario(cursoId));
-//		
-//        return questionarioDTO;
-//    }
-	
-	
 	@GetMapping
-	public QuestionarioDTO abrirQuestionario(@PathVariable Long cursoId, @RequestBody IdUsuarioAbrirQestionarioTesteInput usuarioId) {
-
-//      QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
+	public QuestionarioUsuarioDTO iniciarQuestionario(@PathVariable Long cursoId, @RequestBody IdUsuarioAbrirQestionarioTesteInput usuarioId) {
 		
 		QuestionarioUsuario questionarioUsuario = questionarioService.iniciarQuestionario(cursoId, usuarioId.getUsuarioId());
 		
-		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioUsuario);
-		
-		
-		
-      return questionarioDTO;
+		return questionarioUsuarioAssembler.toDTO(questionarioUsuario);
 	}
 	
 	@PostMapping
@@ -110,9 +100,10 @@ public class QuestionarioController {
 	}
 
 	@PostMapping("/{questionarioId}/respostas")
-	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
+	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
 		
-	    List<RespostaDTO> resultados = questionarioService.verificarRespostas(cursoId, questionarioId, respostasInput);
+//		pegar o id do usuario pelo context de segurança
+	    List<RespostaDTO> resultados = questionarioService.verificarRespostas(cursoId, questionarioId, usuarioId, respostasInput);
 
 	    return resultados;
 	}

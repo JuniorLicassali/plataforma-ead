@@ -1,7 +1,6 @@
 package com.plataforma.plataforma_ead.domain.service;
 
 import java.time.OffsetDateTime;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

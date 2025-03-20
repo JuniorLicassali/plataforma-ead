@@ -36,6 +36,7 @@ public class QuestionarioUsuario {
     private OffsetDateTime dataAbertura;
     private OffsetDateTime dataFechamento;
     private Boolean finalizado = false;
+    private Double nota;
     
     public QuestionarioUsuario() {
     }

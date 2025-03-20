@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.api.dto;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import lombok.Getter;
@@ -15,7 +14,5 @@ public class QuestionarioDTO {
 	private Boolean ativo;
 	private CursoDTO curso;
 	private List<PerguntaDTO> perguntas;
-	private OffsetDateTime dataAbertura;
-	private OffsetDateTime dataFechamento;
 
 }
