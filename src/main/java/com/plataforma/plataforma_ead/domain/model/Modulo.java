@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,7 +32,11 @@ public class Modulo {
 	private String descricao;
 	private Integer ordem;
 	
+	@ManyToOne
+    @JoinColumn(name = "curso_id")
+	private Curso curso;
+	
 	@OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL)
-	private List<Aula> aulas = new ArrayList<>();;
+	private List<Aula> aulas = new ArrayList<>();
 	
 }

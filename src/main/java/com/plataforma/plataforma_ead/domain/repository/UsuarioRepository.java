@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
+import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.model.Usuario;
 
 import java.util.List;
@@ -26,5 +27,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>  {
 	
 	@Query("SELECT m FROM Matricula m WHERE m.curso = :curso AND m.usuario = :usuario")
     Matricula findByCursoAndUsuario(@Param("curso") Curso curso, @Param("usuario") Usuario usuario);
+	
+	@Query("SELECT m.questionarioUsuario FROM Usuario u JOIN u.matriculas m WHERE m.id = :matriculaId")
+    QuestionarioUsuario findQuestionarioUsuarioByMatriculaId(@Param("matriculaId") Long matriculaId);
+
+    @Query("SELECT m FROM Usuario u JOIN u.matriculas m WHERE m.id = :matriculaId")
+    Matricula findMatriculaById(@Param("matriculaId") Long matriculaId);
 	
 }

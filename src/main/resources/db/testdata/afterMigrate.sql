@@ -12,6 +12,8 @@ delete from pergunta;
 delete from questionario;
 delete from questionario_usuario;
 delete from curso;
+delete from modulo;
+delete from aula;
 
 set foreign_key_checks = 1;
 
@@ -23,6 +25,8 @@ alter table questionario auto_increment = 1;
 alter table questionario_usuario auto_increment = 1;
 alter table pergunta auto_increment = 1;
 alter table pergunta_opcao auto_increment = 1;
+alter table modulo auto_increment = 1;
+alter table aula auto_increment = 1;
 
 
 insert into permissao (id, nome, descricao) values (1, 'COMPRAR_CURSOS', 'Permite que usuários comprem cursos');
