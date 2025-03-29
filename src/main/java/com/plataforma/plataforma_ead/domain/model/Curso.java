@@ -3,9 +3,7 @@ package com.plataforma.plataforma_ead.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,6 +15,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
@@ -51,10 +50,8 @@ public class Curso {
 	@UpdateTimestamp
 	private OffsetDateTime dataAtualizacao;
 	
-	@OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
-	private Set<Matricula> matriculas = new HashSet<>();
-	
-	@OneToOne(mappedBy = "curso", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "questionario_id")
 	private Questionario questionario;
 	
 	@OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)

@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
+import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.exception.PagamentoNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.MetodoPagamento;
 import com.plataforma.plataforma_ead.domain.model.Pagamento;
 import com.plataforma.plataforma_ead.domain.model.StatusMatricula;
 import com.plataforma.plataforma_ead.domain.model.StatusPagamento;
-import com.plataforma.plataforma_ead.domain.model.Usuario;
+import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 
 @Service
@@ -21,17 +22,13 @@ public class PagamentoService {
 	private PagamentoRepository pagamentoRepository;
 	
 	@Autowired
-	private CadastroUsuarioService usuarioService;
+	private MatriculaRepository matriculaRepository;
 	
 	@Transactional
 	public Pagamento criarPagamento(Long usuarioId, Long cursoId, MetodoPagamento metodoPagamento) {
 		
-		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-		
-		Matricula matricula = usuario.getMatriculas().stream()
-				.filter(m -> m.getCurso().getId().equals(cursoId) && m.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE)
-				.findFirst()
-		        .orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso: " + cursoId));
+		Matricula matricula = matriculaRepository.findByUsuarioIdAndCursoIdAndStatus(usuarioId, cursoId, StatusMatricula.PAGAMENTO_PENDENTE)
+				.orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso: " + cursoId));
 		
 		boolean pagamentoExistente = matricula.getPagamentos().stream()
 		        .anyMatch(p -> p.getStatusPagamento() == StatusPagamento.PAGAMENTO_PENDENTE);
@@ -69,11 +66,12 @@ public class PagamentoService {
 			if(matricula !=null && matricula.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE) {
 				matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
 				
-				usuarioService.salvar(matricula.getUsuario());
+//				usuarioService.salvar(matricula.getUsuario());
+				matriculaRepository.save(matricula);
 			}
 			
 		} else {
-			throw new IllegalStateException("O pagamento já está concluído.");
+			throw new NegocioException("O pagamento já está concluído.");
 		}
 		
 		return pagamentoRepository.save(pagamento);

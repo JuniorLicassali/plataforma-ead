@@ -18,12 +18,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Table(
+	    name = "matricula",
+	    uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "curso_id"})
+	)
 public class Matricula {
 	
 	@EqualsAndHashCode.Include
@@ -42,11 +48,11 @@ public class Matricula {
     private List<Pagamento> pagamentos = new ArrayList<>();
 	
 	@ManyToOne
-	@JoinColumn(name = "usuario_id", nullable = false)
+	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
 	@ManyToOne
-    @JoinColumn(name = "curso_id", nullable = false)
+    @JoinColumn(name = "curso_id")
 	private Curso curso;
 	
 	@OneToOne(mappedBy = "matricula", cascade = CascadeType.ALL)

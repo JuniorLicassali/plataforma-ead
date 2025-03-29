@@ -22,13 +22,12 @@ import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.model.StatusMatricula;
-import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 
 @Service
 public class GerarCertificadoService {
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private MatriculaService matriculaService;
 	
 	private static final double NOTA_MINIMA = 7.0;
     private static final String BACKGROUND_PATH = "Certificado.png";
@@ -53,7 +52,7 @@ public class GerarCertificadoService {
     }
     
     private Matricula validarMatricula(Long matriculaId) {
-        Matricula matricula = usuarioRepository.findMatriculaById(matriculaId);
+        Matricula matricula = matriculaService.buscarOuFalhar(matriculaId);
         if (matricula == null) {
             throw new MatriculaNaoEncontradaException("Matrícula não encontrada com ID: " + matriculaId);
         }

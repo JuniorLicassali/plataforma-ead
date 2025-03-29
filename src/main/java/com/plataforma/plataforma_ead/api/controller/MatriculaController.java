@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plataforma.plataforma_ead.api.assembler.MatriculaDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.MatriculaDTO;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
-import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
+import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
 
 @RestController
@@ -23,14 +23,14 @@ public class MatriculaController {
 	private MatriculaService matriculaService;
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private MatriculaDTOAssembler matriculaDTOAssembler;
 	
 	@Autowired
-	private MatriculaDTOAssembler matriculaDTOAssembler;
+	private MatriculaRepository matriculaRepository;
 	
 	@GetMapping
 	public List<MatriculaDTO> listar() {
-		List<Matricula> matriculas = usuarioRepository.findAllMatriculas();
+		List<Matricula> matriculas = matriculaRepository.findAll();
 		
 		return matriculaDTOAssembler.toCollectionDTO(matriculas);
 	}

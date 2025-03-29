@@ -23,9 +23,11 @@ import com.plataforma.plataforma_ead.api.dto.input.MatriculaInput;
 import com.plataforma.plataforma_ead.api.dto.input.SenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioComSenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioInput;
+import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.Usuario;
+import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
 import com.plataforma.plataforma_ead.domain.service.CadastroUsuarioService;
@@ -56,6 +58,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private MatriculaService matriculaService;
+	
+	@Autowired
+	private MatriculaRepository matriculaRepository;
 	
 	@GetMapping
 	public List<UsuarioDTO> listar() {
@@ -96,10 +101,8 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{usuarioId}/matriculas")
-	public List<MatriculaDTO> listarPorUsuario(@PathVariable Long usuarioId) {
-		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-		
-		return matriculaDTOAssembler.toCollectionDTO(usuario.getMatriculas());
+	public List<MatriculaDTO> listarMatriculaPorUsuario(@PathVariable Long usuarioId) {
+		return matriculaDTOAssembler.toCollectionDTO(matriculaRepository.findMatriculasByUsuarioId(usuarioId));
 	}
 	
 	@PostMapping("/{usuarioId}/matriculas")
@@ -109,7 +112,7 @@ public class UsuarioController {
 		Curso curso = cursoService.buscarOuFalhar(matriculaInput.getCursoId());
 		
 		if(curso.getAtivo() != true) {
-			throw new Exception("Curso inativo");
+			throw new NegocioException("Curso inativo");
 		}
 		
 		Matricula matricula = matriculaService.matricularUsuario(usuarioId, curso);

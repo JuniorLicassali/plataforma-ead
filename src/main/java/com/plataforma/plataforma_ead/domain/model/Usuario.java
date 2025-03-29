@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -37,9 +35,6 @@ public class Usuario {
 	
 	@Column(nullable = false)
 	private String senha;
-	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-	private Set<Matricula> matriculas = new HashSet<>();
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "dateTime")
