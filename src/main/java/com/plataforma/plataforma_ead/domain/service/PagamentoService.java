@@ -34,7 +34,7 @@ public class PagamentoService {
 		        .anyMatch(p -> p.getStatusPagamento() == StatusPagamento.PAGAMENTO_PENDENTE);
 		
 		 if (pagamentoExistente) {
-		        throw new IllegalStateException("Já existe um pagamento pendente para esta matrícula.");
+		        throw new NegocioException("Já existe um pagamento pendente para esta matrícula.");
 		 }
 		
 		Pagamento pagamento = new Pagamento();

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
+import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.exception.UsuarioNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
@@ -56,7 +57,7 @@ public class MatriculaService {
         boolean usuarioJaMatriculado = matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, curso.getId()).isPresent();
         
         if (usuarioJaMatriculado) {
-            throw new IllegalStateException("O usuário já está matriculado neste curso.");
+            throw new NegocioException("O usuário já está matriculado neste curso.");
         }
 
         Matricula matricula = new Matricula();

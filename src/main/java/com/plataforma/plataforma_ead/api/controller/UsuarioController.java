@@ -33,6 +33,8 @@ import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
 import com.plataforma.plataforma_ead.domain.service.CadastroUsuarioService;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
