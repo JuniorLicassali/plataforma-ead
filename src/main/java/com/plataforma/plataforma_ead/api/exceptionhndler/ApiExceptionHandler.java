@@ -94,7 +94,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		
-		logger.error("Erro de desserialização: ", ex);
+		//logger.error("Erro de desserialização: ", ex);
 		
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
 		

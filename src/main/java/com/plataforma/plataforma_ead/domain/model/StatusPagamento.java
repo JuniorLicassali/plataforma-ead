@@ -6,9 +6,9 @@ import java.util.List;
 public enum StatusPagamento {
 	
 	PAGAMENTO_PENDENTE("Pagamento pendente"),
-	PAGAMENTO_CONCLUIDO("Pagamento concluído"),
-	FALHOU("Falhou"),
-	REEMBOLSADO("Reembolsado");
+	PAGAMENTO_CONCLUIDO("Pagamento concluído", PAGAMENTO_PENDENTE),
+	FALHOU("Falhou", PAGAMENTO_PENDENTE),
+	REEMBOLSADO("Reembolsado", PAGAMENTO_CONCLUIDO);
 	
 	private String descricao;
 	private List<StatusPagamento> statusAnteriores;

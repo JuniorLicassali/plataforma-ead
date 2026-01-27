@@ -1,5 +1,7 @@
 package com.plataforma.plataforma_ead.domain.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
 import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.exception.PagamentoNaoEncontradoException;
+import com.plataforma.plataforma_ead.domain.gateway.AsaasGateway;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.MetodoPagamento;
 import com.plataforma.plataforma_ead.domain.model.Pagamento;
@@ -14,6 +17,8 @@ import com.plataforma.plataforma_ead.domain.model.StatusMatricula;
 import com.plataforma.plataforma_ead.domain.model.StatusPagamento;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
+import com.plataforma.plataforma_ead.infrastructure.payments.asaas.dto.AsaasCobrancaResponse;
+import com.plataforma.plataforma_ead.infrastructure.payments.asaas.dto.AsaasWebhookRequest;
 
 @Service
 public class PagamentoService {
@@ -23,6 +28,9 @@ public class PagamentoService {
 	
 	@Autowired
 	private MatriculaRepository matriculaRepository;
+	
+	@Autowired
+	private AsaasGateway asaasGateway;
 	
 	@Transactional
 	public Pagamento criarPagamento(Long usuarioId, Long cursoId, MetodoPagamento metodoPagamento) {
@@ -43,43 +51,66 @@ public class PagamentoService {
 		pagamento.setMetodoPagamento(metodoPagamento);
 		pagamento.setStatusPagamento(StatusPagamento.PAGAMENTO_PENDENTE);
 		
-		/*
-		* retorno pagamento api
-		* 
-		*/
+		var usuario = matricula.getUsuario();
 		
-		pagamento = pagamentoRepository.saveAndFlush(pagamento);
+		if (usuario.getAsaasCustomerId() == null) {
+            String customerId = asaasGateway.criarCustomer(matricula.getUsuario());
+            usuario.setAsaasCustomerId(customerId);
+            pagamento.getMatricula().setUsuario(usuario);
+        }
+		
+		AsaasCobrancaResponse response =
+                asaasGateway.criarCobranca(
+                        usuario.getAsaasCustomerId(),
+                        matricula.getCurso().getPreco(),
+                        LocalDate.now().plusDays(3), metodoPagamento
+                );
+		
+		pagamento.setAsaasPaymentId(response.getId());
+        pagamento.setAsaasInvoiceUrl(response.getInvoiceUrl());
+		
+		//pagamento = pagamentoRepository.saveAndFlush(pagamento);
+        pagamento = pagamentoRepository.save(pagamento);
+        
+        System.out.println(response);
 		
 		return pagamento;
 	}
 
 	
 	@Transactional
-	public Pagamento confirmarPagamento(Long pagamentoId) {
-		Pagamento pagamento = buscarOuFalhar(pagamentoId);
+	public void confirmarPagamento(AsaasWebhookRequest webhook) {
 		
-		if(pagamento.getStatusPagamento() == StatusPagamento.PAGAMENTO_PENDENTE) {
-			pagamento.setStatusPagamento(StatusPagamento.PAGAMENTO_CONCLUIDO);
+		if("PAYMENT_CONFIRMED".equals(webhook.getEvent())) {
+			Pagamento pagamentoEx = buscarOuFalhar(webhook.getPayment().getId());
 			
-			Matricula matricula = pagamento.getMatricula();
+			if (pagamentoEx.getStatusPagamento() == StatusPagamento.PAGAMENTO_CONCLUIDO) {
+		        return;
+		    }
+			
+			pagamentoEx.setStatusPagamento(StatusPagamento.PAGAMENTO_CONCLUIDO);
+			
+			Matricula matricula = pagamentoEx.getMatricula();
 			
 			if(matricula !=null && matricula.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE) {
 				matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
 				
-//				usuarioService.salvar(matricula.getUsuario());
 				matriculaRepository.save(matricula);
 			}
 			
-		} else {
-			throw new NegocioException("O pagamento já está concluído.");
+			pagamentoRepository.save(pagamentoEx);
 		}
 		
-		return pagamentoRepository.save(pagamento);
 	}
     
     public Pagamento buscarOuFalhar(Long pagamentoId) {
 		return pagamentoRepository.findById(pagamentoId)
 				.orElseThrow(() -> new PagamentoNaoEncontradoException(pagamentoId));
+	}
+    
+    public Pagamento buscarOuFalhar(String paymentId) {
+		return pagamentoRepository.findByPaymentId(paymentId)
+				.orElseThrow(() -> new PagamentoNaoEncontradoException(paymentId));
 	}
     
 }

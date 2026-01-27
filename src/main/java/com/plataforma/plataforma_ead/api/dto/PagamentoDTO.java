@@ -16,5 +16,6 @@ public class PagamentoDTO {
 	private BigDecimal preco;
 	private String statusPagamento;
 	private String metodoPagamento;
+	private String asaasInvoiceUrl;
 	
 }

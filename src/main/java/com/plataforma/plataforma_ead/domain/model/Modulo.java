@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -37,6 +38,7 @@ public class Modulo {
 	private Curso curso;
 	
 	@OneToMany(mappedBy = "modulo", cascade = CascadeType.ALL)
+	@OrderBy("ordem ASC")
 	private List<Aula> aulas = new ArrayList<>();
 	
 }

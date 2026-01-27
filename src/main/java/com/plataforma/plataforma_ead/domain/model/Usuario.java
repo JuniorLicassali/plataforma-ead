@@ -40,6 +40,9 @@ public class Usuario {
 	@Column(nullable = false, columnDefinition = "dateTime")
 	private OffsetDateTime dataCadastro;
 	
+	@Column(name = "asaas_customer_id")
+	private String asaasCustomerId;
+	
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"),
 				inverseJoinColumns = @JoinColumn(name = "grupo_id"))

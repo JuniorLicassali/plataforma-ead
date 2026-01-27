@@ -10,23 +10,13 @@ public enum MetodoPagamento {
 	BOLETO("Boleto");
 	
 	private String descricao;
-	private List<MetodoPagamento> statusAnteriores;
 	
-	private MetodoPagamento(String descricao, MetodoPagamento... statusAnteriores) {
+	private MetodoPagamento(String descricao) {
 		this.descricao = descricao;
-		this.statusAnteriores = Arrays.asList(statusAnteriores);
 	}
 	
 	public String getDescricao() {
 		return this.descricao;
-	}
-	
-	public boolean naoPodeAlterarPara(MetodoPagamento novoStatus) {
-		return !novoStatus.statusAnteriores.contains(this);
-	}
-	
-	public boolean podeAlterarPara(MetodoPagamento novoStatus) {
-		return !naoPodeAlterarPara(novoStatus);
 	}
 	
 }
