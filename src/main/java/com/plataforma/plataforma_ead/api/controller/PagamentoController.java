@@ -20,6 +20,8 @@ import com.plataforma.plataforma_ead.domain.model.Pagamento;
 import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 import com.plataforma.plataforma_ead.domain.service.PagamentoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/pagamentos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PagamentoController {
@@ -49,7 +51,7 @@ public class PagamentoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public PagamentoDTO criarPagamento(@RequestBody PagamentoInput pagamentoInput) {
+	public PagamentoDTO criarPagamento(@RequestBody @Valid PagamentoInput pagamentoInput) {
 		Pagamento pagamento = pagamentoService.criarPagamento(pagamentoInput.getMatricula().getUsuarioId(), pagamentoInput.getMatricula().getCursoId(), pagamentoInput.getMetodoPagamento());
 		
 		return pagamentoDTOAssembler.toDTO(pagamento);

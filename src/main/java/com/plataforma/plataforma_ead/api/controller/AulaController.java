@@ -19,6 +19,8 @@ import com.plataforma.plataforma_ead.api.dto.input.AulaInput;
 import com.plataforma.plataforma_ead.domain.model.Aula;
 import com.plataforma.plataforma_ead.domain.service.CadastroAulaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/cursos/{cursoId}/modulos/{moduloId}/aulas")
 public class AulaController {
@@ -34,7 +36,7 @@ public class AulaController {
 	
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.CREATED)
-	public AulaDTO adicionar(@PathVariable Long cursoId, @PathVariable Long moduloId, @RequestPart("aulaInput") AulaInput aulaInput,@RequestPart("video") MultipartFile video) throws Exception {
+	public AulaDTO adicionar(@PathVariable Long cursoId, @PathVariable Long moduloId, @RequestPart("aulaInput") @Valid AulaInput aulaInput, @RequestPart("video") MultipartFile video) throws Exception {
 		Aula aula = aulaDisassembler.toDomainObject(aulaInput);
 		
 		return aulaAssembler.toDTO(aulaService.salvar(cursoId, aula.getModulo().getId(), aula, video));

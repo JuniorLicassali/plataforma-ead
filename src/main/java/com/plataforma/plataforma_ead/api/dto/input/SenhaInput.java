@@ -1,5 +1,6 @@
 package com.plataforma.plataforma_ead.api.dto.input;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,10 @@ import lombok.Setter;
 @Getter
 public class SenhaInput {
 	
+	@NotBlank
 	private String senhaAtual;
+	
+	@NotBlank
 	private String novaSenha;
 	
 }

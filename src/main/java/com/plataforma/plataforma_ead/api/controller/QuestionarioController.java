@@ -31,6 +31,8 @@ import com.plataforma.plataforma_ead.domain.model.Questionario;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.service.CadastroQuestionarioService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/questionarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class QuestionarioController {
@@ -64,7 +66,7 @@ public class QuestionarioController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public QuestionarioDTO criarQuestionario(@PathVariable Long cursoId, @RequestBody QuestionarioInput questionarioInput) {
+	public QuestionarioDTO criarQuestionario(@PathVariable Long cursoId, @RequestBody @Valid QuestionarioInput questionarioInput) {
 		Questionario questionario = questionarioInputDisassembler.toDomainObject(questionarioInput);
 		
 		questionario = questionarioService.criarQuestionario(cursoId, questionario);
@@ -74,7 +76,7 @@ public class QuestionarioController {
 	
 	@PostMapping("/{questionarioId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public QuestionarioDTO adicionarPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody PerguntaInput perguntaInput) {
+	public QuestionarioDTO adicionarPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody @Valid PerguntaInput perguntaInput) {
 
 		Pergunta pergunta = new Pergunta();
 		pergunta.setEnunciado(perguntaInput.getEnunciado());
@@ -100,7 +102,7 @@ public class QuestionarioController {
 	}
 
 	@PostMapping("/{questionarioId}/respostas")
-	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
+	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody @Valid List<RespostaInput> respostasInput) throws Exception {
 		
 //		pegar o id do usuario pelo context de segurança
 	    List<RespostaDTO> resultados = questionarioService.verificarRespostas(cursoId, questionarioId, usuarioId, respostasInput);

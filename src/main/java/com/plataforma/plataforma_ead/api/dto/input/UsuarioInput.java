@@ -1,5 +1,7 @@
 package com.plataforma.plataforma_ead.api.dto.input;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,11 @@ import lombok.Setter;
 @Getter
 public class UsuarioInput {
 
+	@NotBlank
 	private String nome;
+	
+	@NotBlank
+	@Email
 	private String email;
 	
 }

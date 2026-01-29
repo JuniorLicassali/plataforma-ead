@@ -80,7 +80,7 @@ public class UsuarioController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO adicionar(@RequestBody UsuarioComSenhaInput usuarioInput) {
+	public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
 		Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioInput);
 		usuario = usuarioService.salvar(usuario);
 		
@@ -88,7 +88,7 @@ public class UsuarioController {
 	}
 	
 	@PutMapping("/{usuarioId}")
-	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody UsuarioInput usuarioInput) {
+	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuarioInput) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
 		usuarioInputDisassembler.copyToDomainObject(usuarioInput, usuarioAtual);
 		usuarioAtual = usuarioService.salvar(usuarioAtual);
@@ -98,7 +98,7 @@ public class UsuarioController {
 	
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody SenhaInput senha) {
+	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senha) {
 		usuarioService.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
 	}
 	
@@ -109,7 +109,7 @@ public class UsuarioController {
 	
 	@PostMapping("/{usuarioId}/matriculas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MatriculaDTO matricularUsuario(@PathVariable Long usuarioId, @RequestBody MatriculaInput matriculaInput) throws Exception {
+	public MatriculaDTO matricularUsuario(@PathVariable Long usuarioId, @RequestBody @Valid MatriculaInput matriculaInput) throws Exception {
 		
 		Curso curso = cursoService.buscarOuFalhar(matriculaInput.getCursoId());
 		

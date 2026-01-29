@@ -24,6 +24,8 @@ import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CursoController {
@@ -56,7 +58,7 @@ public class CursoController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CursoDTO adicionar(@RequestBody CursoInput cursoInput) {
+	public CursoDTO adicionar(@RequestBody @Valid CursoInput cursoInput) {
 		Curso curso = cursoInputDisassembler.toDomainObject(cursoInput);
 		cursoService.salvar(curso);
 		
@@ -64,7 +66,7 @@ public class CursoController {
 	}
 	
 	@PutMapping("/{cursoId}")
-	public CursoDTO atualizar(@PathVariable Long cursoId, @RequestBody CursoInput cursoInput) {
+	public CursoDTO atualizar(@PathVariable Long cursoId, @RequestBody @Valid CursoInput cursoInput) {
 		Curso cursoAtual = cursoService.buscarOuFalhar(cursoId);
 		cursoInputDisassembler.copyToDomainObject(cursoInput, cursoAtual);
 		

@@ -23,6 +23,8 @@ import com.plataforma.plataforma_ead.domain.model.Modulo;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroModuloService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/modulos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ModuloController {
@@ -51,7 +53,7 @@ public class ModuloController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ModuloDTO adicionar(@PathVariable Long cursoId, @RequestBody ModuloInput moduloInput) {
+	public ModuloDTO adicionar(@PathVariable Long cursoId, @RequestBody @Valid ModuloInput moduloInput) {
 		Modulo modulo = inputDisassembler.toDomainObject(moduloInput);
 		modulo = moduloService.salvar(modulo, cursoId);
 		
@@ -59,7 +61,7 @@ public class ModuloController {
 	}
 	
 	@PutMapping("/{moduloId}")
-	public ModuloDTO atualizar(@PathVariable Long moduloId, @RequestBody ModuloInput moduloInput) {
+	public ModuloDTO atualizar(@PathVariable Long moduloId, @RequestBody @Valid ModuloInput moduloInput) {
 		
 		Modulo moduloAtual = moduloService.buscarOuFalhar(moduloId);
 		inputDisassembler.copyToDomainObject(moduloInput, moduloAtual);

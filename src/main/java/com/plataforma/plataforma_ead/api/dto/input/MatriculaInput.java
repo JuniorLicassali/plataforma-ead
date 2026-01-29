@@ -11,9 +11,12 @@ public class MatriculaInput {
 //	private UsuarioIdInput usuario;
 //	private CursoIdInput curso;
 	
+	
+	// vira do usuario logado na sessão
+	//@NotNull
 	private Long usuarioId;
 	
-//	@NotNull
+	@NotNull
     private Long cursoId; 
 	
 }
