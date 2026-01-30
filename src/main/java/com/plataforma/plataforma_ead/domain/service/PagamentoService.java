@@ -30,6 +30,9 @@ public class PagamentoService {
 	private MatriculaRepository matriculaRepository;
 	
 	@Autowired
+	private MatriculaService matriculaService;
+	
+	@Autowired
 	private AsaasGateway asaasGateway;
 	
 	@Transactional
@@ -93,9 +96,9 @@ public class PagamentoService {
 			Matricula matricula = pagamentoEx.getMatricula();
 			
 			if(matricula !=null && matricula.getStatusMatricula() == StatusMatricula.PAGAMENTO_PENDENTE) {
-				matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
-				
-				matriculaRepository.save(matricula);
+				//matricula.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
+				//matriculaRepository.save(matricula);
+				matriculaService.confirmarMatricula(matricula.getId());
 			}
 			
 			pagamentoRepository.save(pagamentoEx);

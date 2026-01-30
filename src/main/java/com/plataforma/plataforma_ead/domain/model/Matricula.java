@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
+
+import com.plataforma.plataforma_ead.domain.model.event.MatriculaConfirmadaEvent;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,13 +27,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(
 	    name = "matricula",
 	    uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "curso_id"})
 	)
-public class Matricula {
+public class Matricula extends AbstractAggregateRoot<Matricula> {
 	
 	@EqualsAndHashCode.Include
 	@Id
@@ -57,5 +60,10 @@ public class Matricula {
 	
 	@OneToOne(mappedBy = "matricula", cascade = CascadeType.ALL)
     private QuestionarioUsuario questionarioUsuario;
+	
+	public void confirmar() {
+		this.setStatusMatricula(StatusMatricula.PAGAMENTO_CONFIRMADO);
+		registerEvent(new MatriculaConfirmadaEvent(this));
+	}
 	
 }

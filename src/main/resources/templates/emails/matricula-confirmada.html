@@ -1,0 +1,29 @@
+<html>
+<body style="margin: 0; padding: 0; background-color: #0f172a; font-family: 'Inter', Helvetica, sans-serif;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #1e293b; margin-top: 50px; border-radius: 12px; border: 1px solid #334155;">
+        <tr>
+            <td align="left" style="padding: 40px;">
+                <div style="color: #38bdf8; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Matrícula Ativa</div>
+                <h1 style="color: #f8fafc; font-size: 32px; margin-top: 10px;">Prepare-se para o próximo nível.</h1>
+                
+                <p style="color: #94a3b8; font-size: 16px; line-height: 1.6;">Fala, ${matricula.usuario.nome}! Sua vaga no curso <strong>${matricula.curso.nome}</strong> está garantida.</p>
+                
+                <div style="background-color: #0f172a; padding: 25px; border-radius: 8px; margin: 30px 0;">
+                    <table width="100%">
+                        <tr>
+                            <td style="color: #f8fafc;">Status do Pagamento:</td>
+                            <td align="right" style="color: #22c55e; font-weight: bold;">Confirmado</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #f8fafc; padding-top: 10px;">Valor investido:</td>
+                            <td align="right" style="color: #f8fafc; padding-top: 10px; font-weight: bold;">${matricula.curso.preco?string.currency}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <a href="http://localhost:8080/cursos" style="background-color: #38bdf8; color: #0f172a; padding: 18px 25px; text-decoration: none; border-radius: 6px; font-weight: bold; display: block; text-align: center; font-size: 16px;">ENTRAR NA PLATAFORMA AGORA</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

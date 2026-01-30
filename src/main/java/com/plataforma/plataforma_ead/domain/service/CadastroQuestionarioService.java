@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
+import com.plataforma.plataforma_ead.domain.model.event.CertificadoEmissaoEvent;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.QuestionarioRepository;
@@ -42,6 +44,9 @@ public class CadastroQuestionarioService {
 	
 	@Autowired
 	private MatriculaRepository matriculaRepository;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	
 	@Transactional
 	public Questionario criarQuestionario(Long cursoId, Questionario questionario) {
@@ -141,6 +146,9 @@ public class CadastroQuestionarioService {
 		questionarioUsuario.setFinalizado(Boolean.TRUE);
 
 		cursoRepository.save(curso);
+		if (nota > 7.0) {
+	        publisher.publishEvent(new CertificadoEmissaoEvent(matricula));
+	    }
 		
 		return resultados;
 	}
