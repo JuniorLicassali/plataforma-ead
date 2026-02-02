@@ -16,6 +16,7 @@ import com.plataforma.plataforma_ead.api.assembler.AulaDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.AulaInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.AulaDTO;
 import com.plataforma.plataforma_ead.api.dto.input.AulaInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.AulaControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.model.Aula;
 import com.plataforma.plataforma_ead.domain.service.CadastroAulaService;
 
@@ -23,7 +24,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/cursos/{cursoId}/modulos/{moduloId}/aulas")
-public class AulaController {
+public class AulaController implements AulaControllerOpenApi {
 
 	@Autowired
 	private CadastroAulaService aulaService;
@@ -34,6 +35,7 @@ public class AulaController {
 	@Autowired
 	private AulaInputDisassembler aulaDisassembler;
 	
+	@Override
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.CREATED)
 	public AulaDTO adicionar(@PathVariable Long cursoId, @PathVariable Long moduloId, @RequestPart("aulaInput") @Valid AulaInput aulaInput, @RequestPart("video") MultipartFile video) throws Exception {
@@ -42,9 +44,10 @@ public class AulaController {
 		return aulaAssembler.toDTO(aulaService.salvar(cursoId, aula.getModulo().getId(), aula, video));
 	}
 	
+	@Override
 	@DeleteMapping("/{aulaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void  excluir(@PathVariable Long cursoId, @PathVariable Long moduloId, @PathVariable Long aulaId) {
+	public void excluir(@PathVariable Long cursoId, @PathVariable Long moduloId, @PathVariable Long aulaId) {
 		aulaService.excluir(aulaId);
 	}
 	

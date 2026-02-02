@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import com.plataforma.plataforma_ead.api.assembler.FotoUsuarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.FotoUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.input.FotoUsuarioInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.UsuarioFotoControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.exception.EntidadeNaoEncontradaException;
 import com.plataforma.plataforma_ead.domain.model.FotoUsuario;
 import com.plataforma.plataforma_ead.domain.model.Usuario;
@@ -35,7 +36,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/usuarios/{usuarioId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UsuarioFotoController {
+public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 
 	
 	@Autowired

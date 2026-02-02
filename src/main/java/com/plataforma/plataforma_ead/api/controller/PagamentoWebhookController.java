@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plataforma.plataforma_ead.domain.service.PagamentoService;
 import com.plataforma.plataforma_ead.infrastructure.payments.asaas.dto.AsaasWebhookRequest;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
 @RestController
 @RequestMapping("/payments-webhook")
 public class PagamentoWebhookController {

@@ -1,5 +1,6 @@
 package com.plataforma.plataforma_ead.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class PerguntaOpcaoDTO {
 	
-	private String texto;
+	@Schema(example = "A configuração automática de dependências.")
+    private String texto;
 
 }

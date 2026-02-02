@@ -11,16 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.plataforma.plataforma_ead.api.openapi.controller.CertificadoControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.service.GerarCertificadoService;
 
 @RestController
 @RequestMapping(path = "/certificados", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CertificadoController {
+public class CertificadoController implements CertificadoControllerOpenApi {
 
 	@Autowired
     private GerarCertificadoService certificadoService;
 
-    @GetMapping("/matriculas/{matriculaId}")
+	@Override
+    @GetMapping(value= "/matriculas/{matriculaId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<Resource> emitirCertificado(@PathVariable Long matriculaId) throws Exception {
 
         byte[] certificadoBytes = certificadoService.gerarCertificado(matriculaId);

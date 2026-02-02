@@ -23,6 +23,7 @@ import com.plataforma.plataforma_ead.api.dto.input.MatriculaInput;
 import com.plataforma.plataforma_ead.api.dto.input.SenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioComSenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.UsuarioControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
@@ -38,7 +39,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UsuarioController {
+public class UsuarioController implements UsuarioControllerOpenApi {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;

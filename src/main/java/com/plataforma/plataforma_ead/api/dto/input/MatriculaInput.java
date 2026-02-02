@@ -1,5 +1,6 @@
 package com.plataforma.plataforma_ead.api.dto.input;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +15,11 @@ public class MatriculaInput {
 	
 	// vira do usuario logado na sessão
 	//@NotNull
-	private Long usuarioId;
-	
-	@NotNull
+	@Schema(example = "1")
+    private Long usuarioId;
+    
+    @Schema(example = "1")
+    @NotNull
     private Long cursoId; 
 	
 }

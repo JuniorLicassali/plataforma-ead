@@ -19,6 +19,7 @@ import com.plataforma.plataforma_ead.api.assembler.ModuloDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.ModuloInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.ModuloDTO;
 import com.plataforma.plataforma_ead.api.dto.input.ModuloInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.ModuloControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.model.Modulo;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroModuloService;
@@ -27,7 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/modulos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ModuloController {
+public class ModuloController implements ModuloControllerOpenApi {
 	
 	@Autowired
 	private CursoRepository cursoRepository;
@@ -41,16 +42,19 @@ public class ModuloController {
 	@Autowired
 	private ModuloInputDisassembler inputDisassembler;
 	
+	@Override
 	@GetMapping
 	public List<ModuloDTO> listar(@PathVariable Long cursoId) {
 		return moduloAssembler.toCollectionDTO(cursoRepository.findAllModulosByCursoId(cursoId));
 	}
 	
+	@Override
 	@GetMapping("/{moduloId}")
 	public ModuloDTO buscar(@PathVariable Long cursoId, @PathVariable Long moduloId) {
 		return moduloAssembler.toDTO(moduloService.buscarOuFalhar(moduloId));
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ModuloDTO adicionar(@PathVariable Long cursoId, @RequestBody @Valid ModuloInput moduloInput) {
@@ -60,6 +64,7 @@ public class ModuloController {
 		return moduloAssembler.toDTO(modulo);
 	}
 	
+	@Override
 	@PutMapping("/{moduloId}")
 	public ModuloDTO atualizar(@PathVariable Long moduloId, @RequestBody @Valid ModuloInput moduloInput) {
 		
@@ -70,6 +75,7 @@ public class ModuloController {
 		return moduloAssembler.toDTO(moduloAtual);
 	}
 	
+	@Override
 	@DeleteMapping("/{moduloId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long moduloId) {

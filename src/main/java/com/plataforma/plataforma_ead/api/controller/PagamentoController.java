@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plataforma.plataforma_ead.api.assembler.PagamentoDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.PagamentoDTO;
 import com.plataforma.plataforma_ead.api.dto.input.PagamentoInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.PagamentoControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.model.Pagamento;
 import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 import com.plataforma.plataforma_ead.domain.service.PagamentoService;
@@ -24,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/pagamentos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PagamentoController {
+public class PagamentoController implements PagamentoControllerOpenApi {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
@@ -35,6 +36,7 @@ public class PagamentoController {
 	@Autowired
 	private PagamentoDTOAssembler pagamentoDTOAssembler;
 	
+	@Override
 	@GetMapping
 	public List<PagamentoDTO> listar() {
 		List<PagamentoDTO> pagamentos = pagamentoDTOAssembler.toCollectionDTO(pagamentoRepository.findAll());
@@ -42,6 +44,7 @@ public class PagamentoController {
 		return pagamentos;
 	}
 	
+	@Override
 	@GetMapping("/{pagamentoId}")
 	public PagamentoDTO buscar(@PathVariable Long pagamentoId) {
 		PagamentoDTO pagamento = pagamentoDTOAssembler.toDTO(pagamentoService.buscarOuFalhar(pagamentoId));
@@ -49,6 +52,7 @@ public class PagamentoController {
 		return pagamento;
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PagamentoDTO criarPagamento(@RequestBody @Valid PagamentoInput pagamentoInput) {

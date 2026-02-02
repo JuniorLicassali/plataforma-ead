@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CursoController {
+public class CursoController implements com.plataforma.plataforma_ead.api.openapi.controller.CursoControllerOpenApi {
 	
 	@Autowired
 	private CadastroCursoService cursoService;
@@ -42,6 +41,7 @@ public class CursoController {
 	@Autowired
 	private CursoInputDisassembler cursoInputDisassembler;
 	
+	@Override
 	@GetMapping
 	public List<CursoDTO> listar() {
 		List<CursoDTO> cursos = cursoDTOAssembler.toCollectionDTO(cursoRepository.findAll());
@@ -49,6 +49,7 @@ public class CursoController {
 		return cursos;
 	}
 	
+	@Override
 	@GetMapping("/{cursoId}")
 	public CursoDTO buscar(@PathVariable Long cursoId) {
 		CursoDTO curso = cursoDTOAssembler.toDTO(cursoService.buscarOuFalhar(cursoId));
@@ -56,6 +57,7 @@ public class CursoController {
 		return curso;
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CursoDTO adicionar(@RequestBody @Valid CursoInput cursoInput) {
@@ -65,7 +67,9 @@ public class CursoController {
 		return cursoDTOAssembler.toDTO(curso);
 	}
 	
+	@Override
 	@PutMapping("/{cursoId}")
+	@ResponseStatus(HttpStatus.OK)
 	public CursoDTO atualizar(@PathVariable Long cursoId, @RequestBody @Valid CursoInput cursoInput) {
 		Curso cursoAtual = cursoService.buscarOuFalhar(cursoId);
 		cursoInputDisassembler.copyToDomainObject(cursoInput, cursoAtual);
@@ -75,18 +79,18 @@ public class CursoController {
 		return cursoDTOAssembler.toDTO(cursoAtual);
 	}
 	
+	@Override
 	@PutMapping("/{cursoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<Void> ativar(@PathVariable Long cursoId) {
+	public void ativar(@PathVariable Long cursoId) {
 		cursoService.ativar(cursoId);
-		return ResponseEntity.noContent().build();
 	}
 	
+	@Override
 	@DeleteMapping("/{cursoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<Void> inativar(@PathVariable Long cursoId) {
+	public void inativar(@PathVariable Long cursoId) {
 		cursoService.inativar(cursoId);
-		return ResponseEntity.noContent().build();
 	}
 
 }

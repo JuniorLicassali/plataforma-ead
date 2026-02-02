@@ -25,6 +25,7 @@ import com.plataforma.plataforma_ead.api.dto.input.IdUsuarioAbrirQestionarioTest
 import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
 import com.plataforma.plataforma_ead.api.dto.input.QuestionarioInput;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.QuestionarioControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
 import com.plataforma.plataforma_ead.domain.model.PerguntaOpcao;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
@@ -35,7 +36,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/questionarios", produces = MediaType.APPLICATION_JSON_VALUE)
-public class QuestionarioController {
+public class QuestionarioController implements QuestionarioControllerOpenApi {
 	
 	@Autowired
 	private CadastroQuestionarioService questionarioService;
@@ -102,6 +103,7 @@ public class QuestionarioController {
 	}
 
 	@PostMapping("/{questionarioId}/respostas")
+	@ResponseStatus(HttpStatus.CREATED)
 	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody @Valid List<RespostaInput> respostasInput) throws Exception {
 		
 //		pegar o id do usuario pelo context de segurança

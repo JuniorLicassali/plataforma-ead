@@ -1,8 +1,5 @@
 package com.plataforma.plataforma_ead.domain.model;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum MetodoPagamento {
 	
 	CARTAO_DE_CREDITO("Cartão de credito"),
