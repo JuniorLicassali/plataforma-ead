@@ -5,18 +5,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class QuestionarioDTOAssembler {
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 	
 	public QuestionarioDTO toDTO(Questionario questionario) {
 		return modelMapper.map(questionario, QuestionarioDTO.class);

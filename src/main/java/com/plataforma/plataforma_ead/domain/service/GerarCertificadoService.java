@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +22,13 @@ import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.model.StatusMatricula;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class GerarCertificadoService {
 	
-	@Autowired
-	private MatriculaService matriculaService;
+	private final MatriculaService matriculaService;
 	
 	private static final double NOTA_MINIMA = 7.0;
     private static final String BACKGROUND_PATH = "Certificado.png";

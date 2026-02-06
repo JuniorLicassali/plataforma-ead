@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.plataforma.plataforma_ead.api.dto.PagamentoDTO;
 import com.plataforma.plataforma_ead.domain.model.Pagamento;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class PagamentoDTOAssembler {
 
-	@Autowired
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 	
 	public PagamentoDTO toDTO(Pagamento pagamento) {
 		return modelMapper.map(pagamento, PagamentoDTO.class);

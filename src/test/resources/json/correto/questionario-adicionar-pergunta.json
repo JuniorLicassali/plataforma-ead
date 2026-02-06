@@ -1,0 +1,21 @@
+{
+    "enunciado": "Qual a capital do Brasil?",
+    "opcoes": [
+        {
+            "texto": "Paris",
+            "isCorreta": false
+        },
+        {
+            "texto": "Londres",
+            "isCorreta": false
+        },
+        {
+            "texto": "Roma",
+            "isCorreta": false
+        },
+        {
+            "texto": "Brasília",
+            "isCorreta": true
+        }
+    ]
+}

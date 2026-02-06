@@ -2,18 +2,19 @@ package com.plataforma.plataforma_ead.infrastructure.cloudinary;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CloudinaryStorageService {
 
-	@Autowired
-	private Cloudinary cloudinary;
+	private final Cloudinary cloudinary;
 	
 	public String fazerUpload(MultipartFile arquivoVideo) throws Exception {
         Map uploadResult = cloudinary.uploader().upload(arquivoVideo.getBytes(),

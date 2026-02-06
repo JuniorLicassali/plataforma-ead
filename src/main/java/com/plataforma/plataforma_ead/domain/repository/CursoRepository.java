@@ -17,16 +17,12 @@ import com.plataforma.plataforma_ead.domain.model.Questionario;
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
-//	@Query("SELECT q FROM Curso c JOIN c.questionario q")
-//	Optional<Questionario> findQuestionarioById(Long cursoId);
 	@Query("SELECT q FROM Curso c JOIN c.questionario q WHERE c.id = :cursoId")
 	Optional<Questionario> findQuestionarioById(@Param("cursoId") Long cursoId);
 	
 	@Query("SELECT c FROM Curso c JOIN FETCH c.questionario WHERE c.id = :cursoId")
 	Optional<Curso> findCursoComQuestionario(@Param("cursoId") Long cursoId);
 	
-//	@Query("SELECT m FROM Curso c JOIN c.modulos m")
-//	Optional<Modulo> findModuloById(Long moduloId);
 	@Query("SELECT m FROM Curso c JOIN c.modulos m WHERE m.id = :moduloId")
 	Optional<Modulo> findModuloById(@Param("moduloId") Long moduloId);
 	

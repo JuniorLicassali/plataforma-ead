@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,11 +7,13 @@ import com.plataforma.plataforma_ead.domain.exception.CursoNaoEncontradoExceptio
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CadastroCursoService {
 
-	@Autowired
-	private CursoRepository cursoRepository;
+	private final CursoRepository cursoRepository;
 	
 	@Transactional
 	public Curso salvar(Curso curso) {

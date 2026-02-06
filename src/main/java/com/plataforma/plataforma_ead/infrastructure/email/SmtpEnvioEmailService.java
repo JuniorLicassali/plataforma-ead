@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.infrastructure.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -9,17 +8,14 @@ import com.plataforma.plataforma_ead.domain.service.EnvioEmailService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SmtpEnvioEmailService implements EnvioEmailService {
 
-	@Autowired
-	private JavaMailSender mailSender;
-	
-	@Autowired
-	private EmailProperties emailProperties;
-	
-	@Autowired
-	private ProcessadorEmailTemplate processadorEmailTemplate;
+	private final JavaMailSender mailSender;
+	private final EmailProperties emailProperties;
+	private final ProcessadorEmailTemplate processadorEmailTemplate;
 	
 	@Override
 	public void enviar(Mensagem mensagem) {

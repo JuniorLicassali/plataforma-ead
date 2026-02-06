@@ -3,7 +3,6 @@ package com.plataforma.plataforma_ead.domain.service;
 import java.io.InputStream;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.plataforma.plataforma_ead.domain.exception.FotoUsuarioNaoEncontradaException;
@@ -12,15 +11,15 @@ import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 import com.plataforma.plataforma_ead.domain.service.FotoStorageService.NovaFoto;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CatalogoFotoUsuarioService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 	
-	@Autowired
-	private FotoStorageService fotoStorage;
+	private final FotoStorageService fotoStorage;
 	
 	@Transactional
 	public FotoUsuario salvar(FotoUsuario foto, InputStream dadosArquivo) {

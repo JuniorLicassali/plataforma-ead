@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.domain.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,18 +12,17 @@ import com.plataforma.plataforma_ead.domain.model.Usuario;
 import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CadastroUsuarioService {
 	
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 	
-	@Autowired 
-	private CadastroGrupoService grupoService;
+	private final CadastroGrupoService grupoService;
 	
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 	
 	@Transactional
 	public Usuario salvar(Usuario usuario) {

@@ -29,13 +29,4 @@ public interface AulaControllerOpenApi {
 			@Parameter(description = "ID de um módulo", example = "1", required = true) Long moduloId, 
 			@Parameter(description = "ID de uma aula", example = "1", required = true) Long aulaId);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

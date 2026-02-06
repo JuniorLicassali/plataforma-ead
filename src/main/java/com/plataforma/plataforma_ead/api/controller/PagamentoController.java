@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +21,16 @@ import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 import com.plataforma.plataforma_ead.domain.service.PagamentoService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/pagamentos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class PagamentoController implements PagamentoControllerOpenApi {
 	
-	@Autowired
-	private PagamentoRepository pagamentoRepository;
-	
-	@Autowired
-	private PagamentoService pagamentoService;
-	
-	@Autowired
-	private PagamentoDTOAssembler pagamentoDTOAssembler;
+	private final PagamentoRepository pagamentoRepository;
+	private final PagamentoService pagamentoService;
+	private final PagamentoDTOAssembler pagamentoDTOAssembler;
 	
 	@Override
 	@GetMapping

@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,35 +34,22 @@ import com.plataforma.plataforma_ead.domain.service.CadastroUsuarioService;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 @RestController
 @RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class UsuarioController implements UsuarioControllerOpenApi {
 	
-	@Autowired
-	private UsuarioRepository usuarioRepository;
-	
-	@Autowired
-	private CadastroUsuarioService usuarioService;
-	
-	@Autowired
-	private UsuarioDTOAssembler usuarioDTOAssembler;
-	
-	@Autowired
-	private UsuarioInputDisassembler usuarioInputDisassembler;
-	
-	@Autowired
-	private MatriculaDTOAssembler matriculaDTOAssembler;
-	
-	@Autowired
-	private CadastroCursoService cursoService;
-	
-	@Autowired
-	private MatriculaService matriculaService;
-	
-	@Autowired
-	private MatriculaRepository matriculaRepository;
+	private final UsuarioRepository usuarioRepository;
+	private final CadastroUsuarioService usuarioService;
+	private final UsuarioDTOAssembler usuarioDTOAssembler;
+	private final UsuarioInputDisassembler usuarioInputDisassembler;
+	private final MatriculaDTOAssembler matriculaDTOAssembler;
+	private final CadastroCursoService cursoService;
+	private final MatriculaService matriculaService;
+	private final MatriculaRepository matriculaRepository;
 	
 	@GetMapping
 	public List<UsuarioDTO> listar() {

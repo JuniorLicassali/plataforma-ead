@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plataforma.plataforma_ead.api.openapi.controller.CertificadoControllerOpenApi;
 import com.plataforma.plataforma_ead.domain.service.GerarCertificadoService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(path = "/certificados", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class CertificadoController implements CertificadoControllerOpenApi {
 
-	@Autowired
-    private GerarCertificadoService certificadoService;
+    private final GerarCertificadoService certificadoService;
 
 	@Override
     @GetMapping(value= "/matriculas/{matriculaId}", produces = MediaType.APPLICATION_PDF_VALUE)

@@ -1,0 +1,8 @@
+{
+    "matricula": {
+        "usuarioId": "1",
+        "cursoId": 1
+    },
+    "preco": 500.00,
+    "metodoPagamento": "CARTAO_DE_CREDITO"
+}

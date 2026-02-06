@@ -4,7 +4,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,24 +28,21 @@ import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.QuestionarioRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CadastroQuestionarioService {
 
-	@Autowired
-	private CursoRepository cursoRepository;
+	private final CursoRepository cursoRepository;
 
-	@Autowired
-	private CadastroCursoService cursoService;
+	private final CadastroCursoService cursoService;
 	
-	@Autowired
-	private QuestionarioRepository questionarioRepository;
+	private final QuestionarioRepository questionarioRepository;
 	
-	@Autowired
-	private MatriculaRepository matriculaRepository;
+	private final MatriculaRepository matriculaRepository;
 	
-	@Autowired
-	private ApplicationEventPublisher publisher;
+	private final ApplicationEventPublisher publisher;
 	
 	@Transactional
 	public Questionario criarQuestionario(Long cursoId, Questionario questionario) {

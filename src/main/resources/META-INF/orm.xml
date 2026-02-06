@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+	xmlns = "http://xmlns.jcp.org/xml/ns/persistence/orm"
+    xmlns:xsi ="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:eschemaLocation = "http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
+    version = "2.2" >
+
+	<named-query name="Matricula.podeConsultar">
+		<query>
+			select case when count(1) > 0 then true else false end 
+			from Matricula m join m.usuario u where u.id = :usuarioId
+		</query>
+	</named-query>
+	
+	<named-query name="Matricula.podeConsultarMatrticula">
+		<query>
+			select case when count(m) > 0 then true else false end 
+			from Matricula m where m.id = :matriculaId and m.usuario.id = :usuarioId
+		</query>
+	</named-query>
+	
+	
+	<named-query name="Matricula.podeAcessarCurso">
+		<query>
+			select case when count(m) > 0 then true else false end 
+			from Matricula m where m.statusMatricula = 'PAGAMENTO_CONFIRMADO' 
+			and m.usuario.id = :usuarioId and m.curso.id = :cursoId
+		</query>
+	</named-query>
+
+</entity-mappings>

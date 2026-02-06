@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,22 +24,17 @@ import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroModuloService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/modulos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class ModuloController implements ModuloControllerOpenApi {
 	
-	@Autowired
-	private CursoRepository cursoRepository;
-	
-	@Autowired
-	private CadastroModuloService moduloService;
-	
-	@Autowired
-	private ModuloDTOAssembler moduloAssembler;
-	
-	@Autowired
-	private ModuloInputDisassembler inputDisassembler;
+	private final CursoRepository cursoRepository;
+	private final CadastroModuloService moduloService;
+	private final ModuloDTOAssembler moduloAssembler;
+	private final ModuloInputDisassembler inputDisassembler;
 	
 	@Override
 	@GetMapping

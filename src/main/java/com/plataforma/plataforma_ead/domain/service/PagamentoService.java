@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.domain.service;
 
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +19,19 @@ import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 import com.plataforma.plataforma_ead.infrastructure.payments.asaas.dto.AsaasCobrancaResponse;
 import com.plataforma.plataforma_ead.infrastructure.payments.asaas.dto.AsaasWebhookRequest;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PagamentoService {
 
-	@Autowired
-	private PagamentoRepository pagamentoRepository;
+	private final PagamentoRepository pagamentoRepository;
 	
-	@Autowired
-	private MatriculaRepository matriculaRepository;
+	private final MatriculaRepository matriculaRepository;
 	
-	@Autowired
-	private MatriculaService matriculaService;
+	private final MatriculaService matriculaService;
 	
-	@Autowired
-	private AsaasGateway asaasGateway;
+	private final AsaasGateway asaasGateway;
 	
 	@Transactional
 	public Pagamento criarPagamento(Long usuarioId, Long cursoId, MetodoPagamento metodoPagamento) {

@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.domain.model.listener;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -9,11 +8,13 @@ import com.plataforma.plataforma_ead.domain.model.event.MatriculaConfirmadaEvent
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService;
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService.Mensagem;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class NotificacaoMatriculaConfirmadaListener {
 	
-	@Autowired
-	private EnvioEmailService envioEmail;
+	private final EnvioEmailService envioEmail;
 	
 	@TransactionalEventListener
 	public void aoConfirmarMatricula(MatriculaConfirmadaEvent event) {

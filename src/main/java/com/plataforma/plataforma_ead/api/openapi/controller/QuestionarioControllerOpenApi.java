@@ -14,10 +14,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 @Tag(name = "Questionario")
 public interface QuestionarioControllerOpenApi {
@@ -35,27 +33,25 @@ public interface QuestionarioControllerOpenApi {
 			@ApiResponse(responseCode = "200"),
 			@ApiResponse(responseCode = "404", description = "Questionario não encontrado", content = {
 					@Content(schema = @Schema(ref = "Problema")) }),
-	})
-	public QuestionarioUsuarioDTO iniciarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @RequestBody(description = "Corpo do usuário", required = true) IdUsuarioAbrirQestionarioTesteInput usuarioId);
+	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Corpo do usuário", required = true))
+	public QuestionarioUsuarioDTO iniciarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @jakarta.validation.Valid IdUsuarioAbrirQestionarioTesteInput usuarioId);
 	
-	@Operation(summary = "Cadastra um questionario", responses = {
-			@ApiResponse(responseCode = "201", description = "Questionario cadastrado"),
-	})
-	public QuestionarioDTO criarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @RequestBody(description = "Representação de um novo questionario", required = true) QuestionarioInput questionarioInput);
+	@Operation(
+		    summary = "Cadastra um questionario", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+		        description = "Representação de um novo questionario", 
+		        required = true
+		    )
+		)
+	public QuestionarioDTO criarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @jakarta.validation.Valid QuestionarioInput questionarioInput);
 	
 	@Operation(summary = "Adiciona perguntas a um questionario", responses = {
 			@ApiResponse(responseCode = "201", description = "Perguntas adicionadas"),
-	})
-	public QuestionarioDTO adicionarPergunta(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @RequestBody(description = "Representação de novas perguntas", required = true) PerguntaInput perguntaInput);
+	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação de novas perguntas", required = true))
+	public QuestionarioDTO adicionarPergunta(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @jakarta.validation.Valid PerguntaInput perguntaInput);
 	
 	@Operation(summary = "Enviar respostas de um questionario iniciado", responses = {
 			@ApiResponse(responseCode = "201", description = "Respostas enviadas"),
-	})
-	public List<RespostaDTO> enviarRespostas(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @Parameter(description = "ID de um usuário", example = "1", required = true) Long usuarioId, @RequestBody(description = "Representação das respostas do questionario", required = true) @Valid List<RespostaInput> respostasInput) throws Exception;
-	
-	
-	
-	
-	
+	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação das respostas do questionario", required = true))
+	public List<RespostaDTO> enviarRespostas(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, Long usuarioId, @jakarta.validation.Valid List<RespostaInput> respostasInput) throws Exception;
 
 }

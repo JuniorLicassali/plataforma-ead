@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.domain.service;
 
 import java.time.OffsetDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +15,15 @@ import com.plataforma.plataforma_ead.domain.model.Usuario;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class MatriculaService {
 	
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private final UsuarioRepository usuarioRepository;
 	
-	@Autowired
-	private MatriculaRepository matriculaRepository;
+	private final MatriculaRepository matriculaRepository;
 	
 	@Transactional
     public Matricula matricularUsuario(Long usuarioId, Curso curso) {

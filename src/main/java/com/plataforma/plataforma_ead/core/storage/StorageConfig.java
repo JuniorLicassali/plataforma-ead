@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.core.storage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,11 +12,13 @@ import com.plataforma.plataforma_ead.domain.service.FotoStorageService;
 import com.plataforma.plataforma_ead.infrastructure.storageaws.LocalFotoStorageService;
 import com.plataforma.plataforma_ead.infrastructure.storageaws.S3FotoStorageService;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class StorageConfig {
 
-	@Autowired
-	private StorageProperties storageProperties;
+	private final StorageProperties storageProperties;
 	
 	@Bean
 	//@ConditionalOnProperty(name = "ead.storage.tipo", havingValue = "s3")
@@ -33,11 +34,11 @@ public class StorageConfig {
 	}
 	
 	@Bean
-	public FotoStorageService fotoStorageService() {
+	public FotoStorageService fotoStorageService(AmazonS3 amazonS3) {
 		if (TipoStorage.S3.equals(storageProperties.getTipo())) {
-			return new S3FotoStorageService();
+			return new S3FotoStorageService(amazonS3, storageProperties);
 		} else {
-			return new LocalFotoStorageService();
+			return new LocalFotoStorageService(storageProperties);
 		}
 	}
 	

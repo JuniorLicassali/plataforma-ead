@@ -3,7 +3,6 @@ package com.plataforma.plataforma_ead.api.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,22 +32,17 @@ import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.service.CadastroQuestionarioService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/cursos/{cursoId}/questionarios", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class QuestionarioController implements QuestionarioControllerOpenApi {
 	
-	@Autowired
-	private CadastroQuestionarioService questionarioService;
-	
-	@Autowired
-	private QuestionarioDTOAssembler questionarioDTOAssembler;
-	
-	@Autowired
-	private QuestionarioInputDisassembler questionarioInputDisassembler;
-	
-	@Autowired
-	private QuestionarioUsuarioDTOAssembler questionarioUsuarioAssembler;
+	private final CadastroQuestionarioService questionarioService;
+	private final QuestionarioDTOAssembler questionarioDTOAssembler;
+	private final QuestionarioInputDisassembler questionarioInputDisassembler;
+	private final QuestionarioUsuarioDTOAssembler questionarioUsuarioAssembler;
 	
 	@GetMapping("/{questionarioId}")
 	public QuestionarioDTO buscar(@PathVariable Long cursoId, @PathVariable Long questionarioId) {
@@ -104,7 +98,7 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 
 	@PostMapping("/{questionarioId}/respostas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody @Valid List<RespostaInput> respostasInput) throws Exception {
+	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
 		
 //		pegar o id do usuario pelo context de segurança
 	    List<RespostaDTO> resultados = questionarioService.verificarRespostas(cursoId, questionarioId, usuarioId, respostasInput);

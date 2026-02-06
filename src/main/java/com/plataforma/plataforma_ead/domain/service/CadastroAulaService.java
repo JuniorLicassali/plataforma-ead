@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,17 +12,18 @@ import com.plataforma.plataforma_ead.domain.model.Modulo;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.infrastructure.cloudinary.CloudinaryStorageService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CadastroAulaService {
 	
-	@Autowired
-	private CursoRepository cursoRepository;
+	private final CursoRepository cursoRepository;
 	
-	@Autowired
-	private CadastroCursoService cursoService;
+	private final CadastroCursoService cursoService;
 	
-	@Autowired
-	private CloudinaryStorageService cloudinaryService;
+	private final CloudinaryStorageService cloudinaryService;
+	
 	
 	@Transactional
 	public Aula salvar(Long cursoId, Long moduloId, Aula aula, MultipartFile video) throws Exception {

@@ -3,16 +3,17 @@ package com.plataforma.plataforma_ead.infrastructure.storageaws;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
 import com.plataforma.plataforma_ead.core.storage.StorageProperties;
 import com.plataforma.plataforma_ead.domain.service.FotoStorageService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class LocalFotoStorageService implements FotoStorageService {
 
-	@Autowired
-	private StorageProperties storageProperties;
+	private final StorageProperties storageProperties;
 	
 	@Override
 	public FotoRecuperada recuperar(String nomeArquivo) {

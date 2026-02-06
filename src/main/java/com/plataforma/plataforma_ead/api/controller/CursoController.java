@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,27 +18,23 @@ import com.plataforma.plataforma_ead.api.assembler.CursoDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.CursoInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.CursoDTO;
 import com.plataforma.plataforma_ead.api.dto.input.CursoInput;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroCursoService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class CursoController implements com.plataforma.plataforma_ead.api.openapi.controller.CursoControllerOpenApi {
 	
-	@Autowired
-	private CadastroCursoService cursoService;
-	
-	@Autowired
-	private CursoRepository cursoRepository;
-	
-	@Autowired
-	private CursoDTOAssembler cursoDTOAssembler;
-	
-	@Autowired
-	private CursoInputDisassembler cursoInputDisassembler;
+	private final CadastroCursoService cursoService;
+	private final CursoRepository cursoRepository;
+	private final CursoDTOAssembler cursoDTOAssembler;
+	private final CursoInputDisassembler cursoInputDisassembler;
 	
 	@Override
 	@GetMapping
@@ -57,6 +52,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		return curso;
 	}
 	
+	@CheckSecurity.Curso.PodeEditar
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

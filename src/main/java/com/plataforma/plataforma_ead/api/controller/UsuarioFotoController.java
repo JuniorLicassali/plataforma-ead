@@ -3,7 +3,6 @@ package com.plataforma.plataforma_ead.api.controller;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,23 +32,17 @@ import com.plataforma.plataforma_ead.domain.service.FotoStorageService;
 import com.plataforma.plataforma_ead.domain.service.FotoStorageService.FotoRecuperada;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/usuarios/{usuarioId}/foto", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 
-	
-	@Autowired
-	private CatalogoFotoUsuarioService catalogoFotoUsuario;
-	
-	@Autowired
-	private FotoStorageService fotoStorage;
-	
-	@Autowired
-	private FotoUsuarioDTOAssembler fotoUsuarioDTOAssembler;
-	
-	@Autowired
-	private CadastroUsuarioService usuarioService;
+	private final CatalogoFotoUsuarioService catalogoFotoUsuario;
+	private final FotoStorageService fotoStorage;
+	private final FotoUsuarioDTOAssembler fotoUsuarioDTOAssembler;
+	private final CadastroUsuarioService usuarioService;
 	
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoUsuarioDTO atualizarFoto(@PathVariable Long usuarioId, @Valid FotoUsuarioInput fotoUsuarioInput) throws IOException {

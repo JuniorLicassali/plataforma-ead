@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -12,17 +11,18 @@ import com.plataforma.plataforma_ead.domain.model.Grupo;
 import com.plataforma.plataforma_ead.domain.model.Permissao;
 import com.plataforma.plataforma_ead.domain.repository.GrupoRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CadastroGrupoService {
 	
 	private static final String MSG_GRUPO_EM_USO 
 	= "Grupo de código %d não pode ser removido, pois está em uso";
 
-	@Autowired
-	private GrupoRepository grupoRepository;
+	private final GrupoRepository grupoRepository;
 	
-	@Autowired
-	private CadastroPermissaoService cadastroPermissaoService;
+	private final CadastroPermissaoService cadastroPermissaoService;
 	
 	@Transactional
 	public Grupo salvar(Grupo grupo) {

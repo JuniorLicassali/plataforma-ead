@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,19 +20,19 @@ import com.plataforma.plataforma_ead.domain.model.Aula;
 import com.plataforma.plataforma_ead.domain.service.CadastroAulaService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/cursos/{cursoId}/modulos/{moduloId}/aulas")
+@RequiredArgsConstructor
 public class AulaController implements AulaControllerOpenApi {
 
-	@Autowired
-	private CadastroAulaService aulaService;
+	private final CadastroAulaService aulaService;
 	
-	@Autowired
-	private AulaDTOAssembler aulaAssembler;
+	private final AulaDTOAssembler aulaAssembler;
 	
-	@Autowired
-	private AulaInputDisassembler aulaDisassembler;
+	private final AulaInputDisassembler aulaDisassembler;
 	
 	@Override
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})

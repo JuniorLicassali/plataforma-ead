@@ -2,7 +2,6 @@ package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +15,16 @@ import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(path = "/matriculas", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class MatriculaController implements MatriculaControllerOpenApi {
 	
-	@Autowired
-	private MatriculaService matriculaService;
-	
-	@Autowired
-	private MatriculaDTOAssembler matriculaDTOAssembler;
-	
-	@Autowired
-	private MatriculaRepository matriculaRepository;
+	private final MatriculaService matriculaService;
+	private final MatriculaDTOAssembler matriculaDTOAssembler;
+	private final MatriculaRepository matriculaRepository;
 	
 	@Override
 	@GetMapping

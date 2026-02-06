@@ -1,16 +1,15 @@
 package com.plataforma.plataforma_ead.infrastructure.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class FakeEnvioEmailService implements EnvioEmailService {
 
-	@Autowired
-	private ProcessadorEmailTemplate processadorEmailTemplate;
+	private final ProcessadorEmailTemplate processadorEmailTemplate;
 	
 	@Override
 	public void enviar(Mensagem mensagem) {

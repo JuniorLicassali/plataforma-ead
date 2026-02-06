@@ -2,8 +2,6 @@ package com.plataforma.plataforma_ead.infrastructure.storageaws;
 
 import java.net.URL;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -12,13 +10,13 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.plataforma.plataforma_ead.core.storage.StorageProperties;
 import com.plataforma.plataforma_ead.domain.service.FotoStorageService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class S3FotoStorageService implements FotoStorageService {
 
-	@Autowired
-	private AmazonS3 amazonS3;
-	
-	@Autowired
-	private StorageProperties storageProperties;
+	private final AmazonS3 amazonS3;
+	private final StorageProperties storageProperties;
 	
 	@Override
 	public FotoRecuperada recuperar(String nomeArquivo) {
