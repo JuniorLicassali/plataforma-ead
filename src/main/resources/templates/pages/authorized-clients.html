@@ -26,7 +26,7 @@
         </tr>
         </tbody>
     </table>
-    <form id="revokeForm" style="display: none" action="/oauth2/authorized-clients/revoke" method="POST">
+    <form id="revokeForm" style="display: none" th:action="@{/oauth2/authorized-clients/revoke}" method="POST">
         <input id="clientIdInput" name="client_id" type="hidden">
     </form>
 </div>

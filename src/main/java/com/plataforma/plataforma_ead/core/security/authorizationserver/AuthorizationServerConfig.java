@@ -48,27 +48,30 @@ public class AuthorizationServerConfig {
 		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
 				new OAuth2AuthorizationServerConfigurer();
 		
-			authorizationServerConfigurer
-			.authorizationEndpoint(customizer -> 
-			customizer.consentPage("/oauth2/consent")
-			);
-	
-		RequestMatcher endpointsMatcher = authorizationServerConfigurer
-				.getEndpointsMatcher();
-	
-		http
-			.securityMatcher(endpointsMatcher)
-			.authorizeHttpRequests(authorize -> {
-				authorize.anyRequest().authenticated();
-			})
-			.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
-			.formLogin(Customizer.withDefaults())
-				.exceptionHandling(exceptions -> {
-					exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
-				})
-			.with(authorizationServerConfigurer, Customizer.withDefaults());
-		
-		return http.formLogin(customizer -> customizer.loginPage("/login")).build();
+		authorizationServerConfigurer
+        .authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
+
+    RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+
+    http
+        .securityMatcher(request -> 
+            endpointsMatcher.matches(request) || 
+            request.getServletPath().equals("/login") ||
+            request.getServletPath().startsWith("/oauth2/authorized-clients")
+        )
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/login").permitAll()
+            .requestMatchers("/oauth2/authorized-clients/**").authenticated()
+            .anyRequest().authenticated()
+        )
+        .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
+        .formLogin(form -> form.loginPage("/login").permitAll())
+        .exceptionHandling(exceptions -> exceptions
+            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+        )
+        .with(authorizationServerConfigurer, Customizer.withDefaults());
+
+    return http.build();
 	}
 	
 	@Bean

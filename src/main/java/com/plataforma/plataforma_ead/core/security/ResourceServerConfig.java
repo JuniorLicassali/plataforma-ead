@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,15 +23,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ResourceServerConfig {
 
 	@Bean
-	@Order(2)
 	public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
 		http
         .authorizeHttpRequests(authorize -> authorize
-            .anyRequest().authenticated()
+        		.requestMatchers("/oauth2/consent", "/login").permitAll()
+                .anyRequest().authenticated()
         )
         .csrf(csrf -> csrf.disable())
         .cors(Customizer.withDefaults())
-        .formLogin(Customizer.withDefaults())
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
         );
