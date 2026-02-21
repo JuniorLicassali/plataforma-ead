@@ -10,13 +10,15 @@ Uma plataforma completa de ensino a distância focada em automação. Ideal para
 
 - Banco de Dados: MySQL com persistência via Spring Data JPA.
 
+- Cache & Performance: Redis (utilizado para armazenamento temporário de códigos de segurança com TTL).
+
 - Armazenamento de Arquivos: Amazon S3 (Produção) e Local Storage (Testes).
 
 - Gerenciamento de Vídeos: Cloudinary.
 
 - Pagamentos: Integração com a API do Asaas.
 
-- Comunicação: Serviço SMTP para envio de e-mails automáticos (Confirmação de pagamento, inscrição e envio de certificado).
+- Comunicação: Serviço SMTP para envio de e-mails automáticos (Confirmação de pagamento, inscrição, envio de certificado e redefinição de senha).
 
 - Documentação: Swagger (OpenAPI).
 
@@ -43,6 +45,8 @@ Para o Aluno:
 - Avaliação: Questionários com tempo cronometrado para testar conhecimentos.
 
 - Certificação: Emissão automática de certificado em PDF caso a média da instituição seja atingida.
+
+- Recuperação de Senha: Fluxo seguro com geração de código numérico aleatório, envio via e-mail e validação temporal via Redis (expiração de 5 minutos).
 
 Para Professores/ADMs:
 - Gestão de Conteúdo: Upload de vídeos e criação de novas aulas.
@@ -89,13 +93,16 @@ Faça uma requisição **POST** para `http://localhost:8080/oauth2/token`:
 Pré-requisitos:
 - JDK 17
 - Maven 3.x
-- Docker & MySQL
+- MySQL & Redis
 
 ### Configuração e Execução
 
 1. **Banco de Dados:** No arquivo `application.properties`, ajuste a URL para o seu banco local. Os dados de teste serão injetados automaticamente via `afterMigrate.sql`.
-2. **Armazenamento:** Para testar localmente, mude o caminho no `application.properties` para uma pasta no seu computador.
-3. **Teste de Acesso:** O **Usuário de ID 1** já possui status de "pagamento confirmado". Utilize-o para testar os endpoints restritos sem precisar configurar o token do Asaas.
+2. **Cache:** Se o Redis estiver instalado diretamente na máquina, basta iniciar o serviço. Caso use Docker, você pode subir o Redis rapidamente:
+   ```bash
+   docker run --name plataforma-redis -p 6379:6379 -d redis bash
+3. **Armazenamento:** Para testar localmente, mude o caminho no `application.properties` para uma pasta no seu computador.
+4. **Teste de Acesso:** O **Usuário de ID 1** já possui status de "pagamento confirmado". Utilize-o para testar os endpoints restritos sem precisar configurar o token do Asaas.
 
 ```bash
 # clonar repositório

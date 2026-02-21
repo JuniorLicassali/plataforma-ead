@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +27,7 @@ public class ResourceServerConfig {
 	public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
 		http
         .authorizeHttpRequests(authorize -> authorize
+        		.requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
         		.requestMatchers(
         				"/oauth2/consent", 
         				"/login",
@@ -34,7 +36,9 @@ public class ResourceServerConfig {
         			    "/swagger-ui-custom/**",
         			    "/swagger-ui/**",
         			    "/v3/api-docs/**",
-                        "/payments-webhook"
+                        "/payments-webhook",
+                        "/recuperar-senha",
+                        "/recuperar-senha/alterar"
         		).permitAll()
                 .anyRequest().authenticated()
         )

@@ -70,4 +70,9 @@ public class CadastroUsuarioService {
 	public Usuario buscarOuFalhar(Long usuarioId) {
 		return usuarioRepository.findById(usuarioId).orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
 	}
+	
+	public Usuario buscarPorEmailOuFalhar(String email) {
+		return usuarioRepository.findByEmail(email)
+	            .orElseThrow(() -> new UsuarioNaoEncontradoException(email));
+	}
 }

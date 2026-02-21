@@ -46,6 +46,7 @@ public class SpringDocConfig {
 	private static final String notFoundResponse = "NotFoundResponse";
 	private static final String notAcceptableResponse = "NotAcceptableResponse";
 	private static final String internalServerErrorResponse = "InternalServerErrorResponse";
+	private static final String unauthorized = "Unauthorized";
 
 	@Bean
 	public OpenAPI openAPI() {
@@ -66,7 +67,8 @@ public class SpringDocConfig {
 						new Tag().name("Usuários").description("Gerencia os usuários"),
 						new Tag().name("Grupos").description("Gerencia os grupos"),
 						new Tag().name("Permissões").description("Gerencia as permissões"),
-						new Tag().name("Certificado").description("Gerencia emissão certificado")))
+						new Tag().name("Certificado").description("Gerencia emissão certificado"),
+						new Tag().name("Redefinir Senha").description("Gerencia funcionalidade de usuário redefinir senha")))
 				.components(new Components()
 						.schemas(gerarSchemas())
 						.responses(gerarResponses())
@@ -82,18 +84,22 @@ public class SpringDocConfig {
 						ApiResponses responses = operation.getResponses();
 						switch (httpMethod) {
 						case GET:
+							responses.addApiResponse("401", new ApiResponse().$ref(unauthorized));
 							responses.addApiResponse("406", new ApiResponse().$ref(notAcceptableResponse));
 							responses.addApiResponse("500", new ApiResponse().$ref(internalServerErrorResponse));
 							break;
 						case POST:
+							responses.addApiResponse("401", new ApiResponse().$ref(unauthorized));
 							responses.addApiResponse("400", new ApiResponse().$ref(badRequestResponse));
 							responses.addApiResponse("500", new ApiResponse().$ref(internalServerErrorResponse));
 							break;
 						case PUT:
+							responses.addApiResponse("401", new ApiResponse().$ref(unauthorized));
 							responses.addApiResponse("400", new ApiResponse().$ref(badRequestResponse));
 							responses.addApiResponse("500", new ApiResponse().$ref(internalServerErrorResponse));
 							break;
 						case DELETE:
+							responses.addApiResponse("401", new ApiResponse().$ref(unauthorized));
 							responses.addApiResponse("500", new ApiResponse().$ref(internalServerErrorResponse));
 							break;
 						default:
@@ -123,6 +129,8 @@ public class SpringDocConfig {
 		Content content = new Content().addMediaType(APPLICATION_JSON_VALUE,
 				new MediaType().schema(new Schema<Problem>().$ref("Problema")));
 
+		apiResponseMap.put(unauthorized, new ApiResponse().description("Não autorizado").content(content));
+		
 		apiResponseMap.put(badRequestResponse, new ApiResponse().description("Requisição inválida").content(content));
 
 		apiResponseMap.put(notFoundResponse, new ApiResponse().description("Recurso não encontrado").content(content));
