@@ -50,6 +50,9 @@ public class Curso {
 	@UpdateTimestamp
 	private OffsetDateTime dataAtualizacao;
 	
+	@Column(name = "professor_id")
+	private Long professorId;
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "questionario_id")
 	private Questionario questionario;

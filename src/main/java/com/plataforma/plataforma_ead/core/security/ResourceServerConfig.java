@@ -26,7 +26,16 @@ public class ResourceServerConfig {
 	public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
 		http
         .authorizeHttpRequests(authorize -> authorize
-        		.requestMatchers("/oauth2/consent", "/login").permitAll()
+        		.requestMatchers(
+        				"/oauth2/consent", 
+        				"/login",
+        				"/oauth2/consent",
+        			    "/swagger-ui-custom.html",
+        			    "/swagger-ui-custom/**",
+        			    "/swagger-ui/**",
+        			    "/v3/api-docs/**",
+                        "/payments-webhook"
+        		).permitAll()
                 .anyRequest().authenticated()
         )
         .csrf(csrf -> csrf.disable())

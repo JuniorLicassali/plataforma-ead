@@ -23,6 +23,7 @@ import com.plataforma.plataforma_ead.api.assembler.FotoUsuarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.FotoUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.input.FotoUsuarioInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.UsuarioFotoControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.exception.EntidadeNaoEncontradaException;
 import com.plataforma.plataforma_ead.domain.model.FotoUsuario;
 import com.plataforma.plataforma_ead.domain.model.Usuario;
@@ -44,6 +45,8 @@ public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 	private final FotoUsuarioDTOAssembler fotoUsuarioDTOAssembler;
 	private final CadastroUsuarioService usuarioService;
 	
+	@CheckSecurity.FotoUsuario.PodeEditar
+	@Override
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoUsuarioDTO atualizarFoto(@PathVariable Long usuarioId, @Valid FotoUsuarioInput fotoUsuarioInput) throws IOException {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
@@ -61,12 +64,16 @@ public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 		return fotoUsuarioDTOAssembler.toModel(fotoSalva);
 	}
 	
+	@CheckSecurity.FotoUsuario.PodeEditar
+	@Override
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long usuarioId) {
 		catalogoFotoUsuario.excluir(usuarioId);
 	}
 	
+	@CheckSecurity.FotoUsuario.PodeEditar
+	@Override
 	@GetMapping
 	public FotoUsuarioDTO buscar(@PathVariable Long usuarioId) {
 		FotoUsuario fotoUsuario = catalogoFotoUsuario.buscarOuFalhar(usuarioId);
@@ -74,6 +81,8 @@ public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 		return fotoUsuarioDTOAssembler.toModel(fotoUsuario);
 	}
 	
+	@CheckSecurity.FotoUsuario.PodeEditar
+	@Override
 	@GetMapping(produces = MediaType.ALL_VALUE)
 	public ResponseEntity<?> servir(@PathVariable Long usuarioId, @RequestHeader(name = "accept") String acceptHeader) 
 					throws HttpMediaTypeNotAcceptableException {

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import com.plataforma.plataforma_ead.api.dto.FotoUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.input.FotoUsuarioInput;
 
+@SecurityRequirement(name = "security_auth")
 @Tag(name = "Usuários")
 public interface UsuarioFotoControllerOpenApi {
 	

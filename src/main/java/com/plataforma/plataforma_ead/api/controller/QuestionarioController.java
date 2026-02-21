@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +24,8 @@ import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
 import com.plataforma.plataforma_ead.api.dto.input.QuestionarioInput;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.QuestionarioControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
+import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
 import com.plataforma.plataforma_ead.domain.model.PerguntaOpcao;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
@@ -43,7 +44,10 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 	private final QuestionarioDTOAssembler questionarioDTOAssembler;
 	private final QuestionarioInputDisassembler questionarioInputDisassembler;
 	private final QuestionarioUsuarioDTOAssembler questionarioUsuarioAssembler;
+	private final PlataformaSecurity plataformaSecurity;
 	
+	@CheckSecurity.Questionario.PodeEditar
+	@Override
 	@GetMapping("/{questionarioId}")
 	public QuestionarioDTO buscar(@PathVariable Long cursoId, @PathVariable Long questionarioId) {
 		QuestionarioDTO questionarioDTO = questionarioDTOAssembler.toDTO(questionarioService.buscarOuFalhar(cursoId));
@@ -51,6 +55,8 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 		return questionarioDTO;
 	}
 	
+	@CheckSecurity.Questionario.PodeConsultar
+	@Override
 	@GetMapping
 	public QuestionarioUsuarioDTO iniciarQuestionario(@PathVariable Long cursoId, @RequestBody IdUsuarioAbrirQestionarioTesteInput usuarioId) {
 		
@@ -59,6 +65,7 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 		return questionarioUsuarioAssembler.toDTO(questionarioUsuario);
 	}
 	
+	@CheckSecurity.Questionario.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public QuestionarioDTO criarQuestionario(@PathVariable Long cursoId, @RequestBody @Valid QuestionarioInput questionarioInput) {
@@ -69,6 +76,8 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 		return questionarioDTOAssembler.toDTO(questionario);
 	}
 	
+	@CheckSecurity.Questionario.PodeEditar
+	@Override
 	@PostMapping("/{questionarioId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public QuestionarioDTO adicionarPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody @Valid PerguntaInput perguntaInput) {
@@ -96,11 +105,13 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 		
 	}
 
+	@CheckSecurity.Questionario.PodeConsultar
+	@Override
 	@PostMapping("/{questionarioId}/respostas")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestParam Long usuarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
+	public List<RespostaDTO> enviarRespostas(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody List<RespostaInput> respostasInput) throws Exception {
 		
-//		pegar o id do usuario pelo context de segurança
+		Long usuarioId = plataformaSecurity.getUsuarioId();
 	    List<RespostaDTO> resultados = questionarioService.verificarRespostas(cursoId, questionarioId, usuarioId, respostasInput);
 
 	    return resultados;

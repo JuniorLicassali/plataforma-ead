@@ -1,6 +1,5 @@
 package com.plataforma.plataforma_ead.api.exceptionhndler;
 
-import java.nio.file.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -45,6 +45,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
@@ -193,9 +195,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
+	
 
-	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<?> handleEntidadeNaoEncontrada(AccessDeniedException ex, WebRequest request) {
+	@ExceptionHandler(AuthorizationDeniedException.class)
+	public ResponseEntity<?> handleEntidadeNaoEncontrada(AuthorizationDeniedException ex, WebRequest request) {
 
 		HttpStatus status = HttpStatus.FORBIDDEN;
 		ProblemType problemType = ProblemType.ACESSO_NEGADO;

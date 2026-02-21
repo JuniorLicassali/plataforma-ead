@@ -23,6 +23,8 @@ import com.plataforma.plataforma_ead.api.dto.input.SenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioComSenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.UsuarioInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.UsuarioControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
+import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
 import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
@@ -50,7 +52,10 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	private final CadastroCursoService cursoService;
 	private final MatriculaService matriculaService;
 	private final MatriculaRepository matriculaRepository;
+	private final PlataformaSecurity plataformaSecurity;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping
 	public List<UsuarioDTO> listar() {
 		List<UsuarioDTO> todosUsuarios = usuarioDTOAssembler.toCollectionDTO(usuarioRepository.findAll());
@@ -58,6 +63,8 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return todosUsuarios;
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping("/{usuarioId}")
 	public UsuarioDTO buscar(@PathVariable Long usuarioId) {
 		UsuarioDTO usuario = usuarioDTOAssembler.toDTO(usuarioService.buscarOuFalhar(usuarioId));
@@ -65,6 +72,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return usuario;
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
@@ -74,6 +82,8 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return usuarioDTOAssembler.toDTO(usuario);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
+	@Override
 	@PutMapping("/{usuarioId}")
 	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuarioInput) {
 		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
@@ -83,28 +93,33 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return usuarioDTOAssembler.toDTO(usuarioAtual);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarPropriaSenha
+	@Override
 	@PutMapping("/{usuarioId}/senha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senha) {
 		usuarioService.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
 	}
 	
+	@Override
 	@GetMapping("/{usuarioId}/matriculas")
 	public List<MatriculaDTO> listarMatriculaPorUsuario(@PathVariable Long usuarioId) {
 		return matriculaDTOAssembler.toCollectionDTO(matriculaRepository.findMatriculasByUsuarioId(usuarioId));
 	}
 	
+	@CheckSecurity.Matricula.PodeMatricular
+	@Override
 	@PostMapping("/{usuarioId}/matriculas")
 	@ResponseStatus(HttpStatus.CREATED)
 	public MatriculaDTO matricularUsuario(@PathVariable Long usuarioId, @RequestBody @Valid MatriculaInput matriculaInput) throws Exception {
-		
+		Long idDoUsuarioLogado = plataformaSecurity.getUsuarioId();
 		Curso curso = cursoService.buscarOuFalhar(matriculaInput.getCursoId());
 		
 		if(curso.getAtivo() != true) {
 			throw new NegocioException("Curso inativo");
 		}
 		
-		Matricula matricula = matriculaService.matricularUsuario(usuarioId, curso);
+		Matricula matricula = matriculaService.matricularUsuario(idDoUsuarioLogado, curso);
 		
 		return matriculaDTOAssembler.toDTO(matricula);
 	}

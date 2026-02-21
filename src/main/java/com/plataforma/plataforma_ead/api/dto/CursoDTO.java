@@ -9,20 +9,20 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CursoDTO {
-	
-	 	@Schema(example = "1")
-	    private Long id;
 
-	    @Schema(example = "Formação Java Fullstack")
-	    private String nome;
+	@Schema(example = "1")
+	private Long id;
 
-	    @Schema(example = "Aprenda do zero ao deploy com as tecnologias mais modernas.")
-	    private String descricao;
+	@Schema(example = "Formação Java Fullstack")
+	private String nome;
 
-	    @Schema(example = "497.00")
-	    private BigDecimal preco;
+	@Schema(example = "Aprenda do zero ao deploy com as tecnologias mais modernas.")
+	private String descricao;
 
-	    @Schema(example = "true")
-	    private Boolean ativo;
+	@Schema(example = "497.00")
+	private BigDecimal preco;
+
+	@Schema(example = "true")
+	private Boolean ativo;
 
 }

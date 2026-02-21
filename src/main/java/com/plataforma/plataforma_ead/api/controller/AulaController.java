@@ -16,6 +16,7 @@ import com.plataforma.plataforma_ead.api.assembler.AulaInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.AulaDTO;
 import com.plataforma.plataforma_ead.api.dto.input.AulaInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.AulaControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Aula;
 import com.plataforma.plataforma_ead.domain.service.CadastroAulaService;
 
@@ -34,6 +35,7 @@ public class AulaController implements AulaControllerOpenApi {
 	
 	private final AulaInputDisassembler aulaDisassembler;
 	
+	@CheckSecurity.Aula.PodeEditar
 	@Override
 	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	@ResponseStatus(HttpStatus.CREATED)
@@ -43,6 +45,7 @@ public class AulaController implements AulaControllerOpenApi {
 		return aulaAssembler.toDTO(aulaService.salvar(cursoId, aula.getModulo().getId(), aula, video));
 	}
 	
+	@CheckSecurity.Aula.PodeExcluirAula
 	@Override
 	@DeleteMapping("/{aulaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

@@ -16,6 +16,8 @@ import com.plataforma.plataforma_ead.api.assembler.PagamentoDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.PagamentoDTO;
 import com.plataforma.plataforma_ead.api.dto.input.PagamentoInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.PagamentoControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
+import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
 import com.plataforma.plataforma_ead.domain.model.Pagamento;
 import com.plataforma.plataforma_ead.domain.repository.PagamentoRepository;
 import com.plataforma.plataforma_ead.domain.service.PagamentoService;
@@ -31,7 +33,9 @@ public class PagamentoController implements PagamentoControllerOpenApi {
 	private final PagamentoRepository pagamentoRepository;
 	private final PagamentoService pagamentoService;
 	private final PagamentoDTOAssembler pagamentoDTOAssembler;
+	private final PlataformaSecurity plataformaSecurity;
 	
+	@CheckSecurity.Pagamento.PodeListar
 	@Override
 	@GetMapping
 	public List<PagamentoDTO> listar() {
@@ -40,6 +44,7 @@ public class PagamentoController implements PagamentoControllerOpenApi {
 		return pagamentos;
 	}
 	
+	@CheckSecurity.Pagamento.PodeConsultar
 	@Override
 	@GetMapping("/{pagamentoId}")
 	public PagamentoDTO buscar(@PathVariable Long pagamentoId) {
@@ -48,11 +53,13 @@ public class PagamentoController implements PagamentoControllerOpenApi {
 		return pagamento;
 	}
 	
+	@CheckSecurity.Pagamento.PodeCriar
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PagamentoDTO criarPagamento(@RequestBody @Valid PagamentoInput pagamentoInput) {
-		Pagamento pagamento = pagamentoService.criarPagamento(pagamentoInput.getMatricula().getUsuarioId(), pagamentoInput.getMatricula().getCursoId(), pagamentoInput.getMetodoPagamento());
+		Long usuarioId = plataformaSecurity.getUsuarioId();
+		Pagamento pagamento = pagamentoService.criarPagamento(usuarioId, pagamentoInput.getMatricula().getCursoId(), pagamentoInput.getMetodoPagamento());
 		
 		return pagamentoDTOAssembler.toDTO(pagamento);
 	}

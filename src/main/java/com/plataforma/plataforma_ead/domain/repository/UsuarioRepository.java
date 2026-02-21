@@ -1,6 +1,7 @@
 package com.plataforma.plataforma_ead.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -11,11 +12,13 @@ import java.util.Optional;
 
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long>, UsuarioRepositoryQueries  {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long>, UsuarioRepositoryQueries, JpaSpecificationExecutor<Usuario>  {
 	
 	Optional<Usuario> findByEmail(String email);
 	
 	@Query("select f from FotoUsuario f join f.usuario u where u.id = :usuarioId")
 	Optional<FotoUsuario> findFotoById(Long usuarioId);
+	
+	boolean podeEditarFoto(Long usuarioId);
 	
 }

@@ -27,5 +27,26 @@
 			and m.usuario.id = :usuarioId and m.curso.id = :cursoId
 		</query>
 	</named-query>
+	
+	<named-query name="Curso.podeEditarCurso">
+		<query>
+			select case when count(1) > 0 then true else false end 
+			from Curso c where c.id = :cursoId and c.professorId = :usuarioId
+		</query>
+	</named-query>
+	
+	<named-query name="Pagamento.podeConsultar">
+		<query>
+			select case when count(1) > 0 then true else false end 
+			from Pagamento p join p.matricula.usuario u where p.id = :pagamentoId and u.id = :usuarioId
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.podeEditarFoto">
+		<query>
+			select case when count(1) > 0 then true else false end 
+			from Usuario u where u.id = :usuarioId
+		</query>
+	</named-query>
 
 </entity-mappings>

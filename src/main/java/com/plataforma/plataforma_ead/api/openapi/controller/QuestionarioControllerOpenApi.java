@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+@SecurityRequirement(name = "security_auth")
 @Tag(name = "Questionario")
 public interface QuestionarioControllerOpenApi {
 	
@@ -52,6 +54,6 @@ public interface QuestionarioControllerOpenApi {
 	@Operation(summary = "Enviar respostas de um questionario iniciado", responses = {
 			@ApiResponse(responseCode = "201", description = "Respostas enviadas"),
 	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação das respostas do questionario", required = true))
-	public List<RespostaDTO> enviarRespostas(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, Long usuarioId, @jakarta.validation.Valid List<RespostaInput> respostasInput) throws Exception;
+	public List<RespostaDTO> enviarRespostas(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @jakarta.validation.Valid List<RespostaInput> respostasInput) throws Exception;
 
 }

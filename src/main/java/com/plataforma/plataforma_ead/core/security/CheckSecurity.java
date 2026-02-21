@@ -12,12 +12,12 @@ public @interface CheckSecurity {
 
 	public @interface Curso {
 		
-		@PreAuthorize("@plataformaSecurity.podeConsultarCozinhas()")
+		@PreAuthorize("@plataformaSecurity.podeConsultarCursos(#cursoId)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeConsultar { }
 		
-		@PreAuthorize("hasAuthority('SCOPE_WRITE') and @plataformaSecurity.podeGerenciarCursos()")
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and @plataformaSecurity.podeEditarCurso(#cursoId)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeEditar { }
@@ -48,42 +48,84 @@ public @interface CheckSecurity {
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeConsultar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated() and @plataformaSecurity.podeListarMatriculas()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeListar { }
+		
+		@PreAuthorize("@plataformaSecurity.podeMatricular(#usuarioId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeMatricular { }
 	}
 	
 	
+	public @interface Modulo {
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated() and @plataformaSecurity.podeConsultarCursos(#cursoId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and @plataformaSecurity.podeEditarCurso(#cursoId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
+		
+	}
 	
 	
+	public @interface Pagamento {
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated() and @plataformaSecurity.podeListarPagamentos()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeListar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated() and @plataformaSecurity.podeConsultarPagamento(#pagamentoId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+		
+		@PreAuthorize("isAuthenticated()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeCriar { }
+		
+	}
 	
 	
+	public @interface Questionario {
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('SCOPE_WRITE') and isAuthenticated() and @plataformaSecurity.podeEditarQuestionario(#cursoId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('SCOPE_WRITE') and isAuthenticated() and @plataformaSecurity.podeIniciarOuEnviarRespostasAoQuestionario(#cursoId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
+		
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public @interface FotoUsuario {
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('SCOPE_WRITE') and isAuthenticated() and @plataformaSecurity.podeEditarFotoUsuario()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeEditar { }
+		
+	}
+		
 	
 	
 	
 	public @interface UsuariosGruposPermissoes {
 		
 		@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
-				+ "@algaSecurity.usuarioAutenticadoIgual(#usuarioId)")
+				+ "@plataformaSecurity.usuarioAutenticadoIgual(#usuarioId)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeAlterarPropriaSenha { }

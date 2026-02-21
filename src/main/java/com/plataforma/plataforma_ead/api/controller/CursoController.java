@@ -44,6 +44,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		return cursos;
 	}
 	
+	@CheckSecurity.Curso.PodeConsultar
 	@Override
 	@GetMapping("/{cursoId}")
 	public CursoDTO buscar(@PathVariable Long cursoId) {
@@ -63,6 +64,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		return cursoDTOAssembler.toDTO(curso);
 	}
 	
+	@CheckSecurity.Curso.PodeEditar
 	@Override
 	@PutMapping("/{cursoId}")
 	@ResponseStatus(HttpStatus.OK)
@@ -75,6 +77,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		return cursoDTOAssembler.toDTO(cursoAtual);
 	}
 	
+	@CheckSecurity.Curso.PodeEditar
 	@Override
 	@PutMapping("/{cursoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -82,6 +85,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		cursoService.ativar(cursoId);
 	}
 	
+	@CheckSecurity.Curso.PodeEditar
 	@Override
 	@DeleteMapping("/{cursoId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

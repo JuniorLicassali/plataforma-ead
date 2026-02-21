@@ -19,6 +19,7 @@ import com.plataforma.plataforma_ead.api.assembler.ModuloInputDisassembler;
 import com.plataforma.plataforma_ead.api.dto.ModuloDTO;
 import com.plataforma.plataforma_ead.api.dto.input.ModuloInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.ModuloControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Modulo;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.service.CadastroModuloService;
@@ -36,18 +37,21 @@ public class ModuloController implements ModuloControllerOpenApi {
 	private final ModuloDTOAssembler moduloAssembler;
 	private final ModuloInputDisassembler inputDisassembler;
 	
+	@CheckSecurity.Modulo.PodeConsultar
 	@Override
 	@GetMapping
 	public List<ModuloDTO> listar(@PathVariable Long cursoId) {
 		return moduloAssembler.toCollectionDTO(cursoRepository.findAllModulosByCursoId(cursoId));
 	}
 	
+	@CheckSecurity.Modulo.PodeEditar
 	@Override
 	@GetMapping("/{moduloId}")
 	public ModuloDTO buscar(@PathVariable Long cursoId, @PathVariable Long moduloId) {
 		return moduloAssembler.toDTO(moduloService.buscarOuFalhar(moduloId));
 	}
 
+	@CheckSecurity.Modulo.PodeEditar
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -58,6 +62,7 @@ public class ModuloController implements ModuloControllerOpenApi {
 		return moduloAssembler.toDTO(modulo);
 	}
 	
+	@CheckSecurity.Modulo.PodeEditar
 	@Override
 	@PutMapping("/{moduloId}")
 	public ModuloDTO atualizar(@PathVariable Long moduloId, @RequestBody @Valid ModuloInput moduloInput) {
@@ -69,6 +74,7 @@ public class ModuloController implements ModuloControllerOpenApi {
 		return moduloAssembler.toDTO(moduloAtual);
 	}
 	
+	@CheckSecurity.Modulo.PodeEditar
 	@Override
 	@DeleteMapping("/{moduloId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plataforma.plataforma_ead.api.assembler.MatriculaDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.MatriculaDTO;
 import com.plataforma.plataforma_ead.api.openapi.controller.MatriculaControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
@@ -26,6 +27,7 @@ public class MatriculaController implements MatriculaControllerOpenApi {
 	private final MatriculaDTOAssembler matriculaDTOAssembler;
 	private final MatriculaRepository matriculaRepository;
 	
+	@CheckSecurity.Matricula.PodeListar
 	@Override
 	@GetMapping
 	public List<MatriculaDTO> listar() {
@@ -34,6 +36,7 @@ public class MatriculaController implements MatriculaControllerOpenApi {
 		return matriculaDTOAssembler.toCollectionDTO(matriculas);
 	}
 
+	@CheckSecurity.Matricula.PodeConsultar
 	@Override
 	@GetMapping("/{matriculaId}")
 	public MatriculaDTO buscar(@PathVariable Long matriculaId) {

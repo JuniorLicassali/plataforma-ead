@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import com.plataforma.plataforma_ead.api.exceptionhndler.Problem;
 
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.OAuthFlow;
+import io.swagger.v3.oas.annotations.security.OAuthFlows;
+import io.swagger.v3.oas.annotations.security.OAuthScope;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -25,6 +30,16 @@ import io.swagger.v3.oas.models.tags.Tag;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Configuration
+@SecurityScheme(name = "security_auth",
+type = SecuritySchemeType.OAUTH2,
+flows = @OAuthFlows(authorizationCode = @OAuthFlow(
+        authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}",
+        tokenUrl = "${springdoc.oAuthFlow.tokenUrl}",
+        scopes = {
+                @OAuthScope(name = "READ", description = "read scope"),
+                @OAuthScope(name = "WRITE", description = "write scope")
+        }
+)))
 public class SpringDocConfig {
 
 	private static final String badRequestResponse = "BadRequestResponse";
@@ -49,6 +64,8 @@ public class SpringDocConfig {
 						new Tag().name("Pagamentos").description("Gerencia os pagamentos"),
 						new Tag().name("Questionario").description("Gerencia o questionario"),
 						new Tag().name("Usuários").description("Gerencia os usuários"),
+						new Tag().name("Grupos").description("Gerencia os grupos"),
+						new Tag().name("Permissões").description("Gerencia as permissões"),
 						new Tag().name("Certificado").description("Gerencia emissão certificado")))
 				.components(new Components()
 						.schemas(gerarSchemas())

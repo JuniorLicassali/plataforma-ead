@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +16,7 @@ import com.plataforma.plataforma_ead.domain.model.Modulo;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
 
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Long> {
+public interface CursoRepository extends JpaRepository<Curso, Long>, JpaSpecificationExecutor<Curso> {
 
 	@Query("SELECT q FROM Curso c JOIN c.questionario q WHERE c.id = :cursoId")
 	Optional<Questionario> findQuestionarioById(@Param("cursoId") Long cursoId);
@@ -43,5 +44,8 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 	@Modifying
     @Query("DELETE FROM Modulo m WHERE m.id = :moduloId")
     void deleteModuloById(@Param("moduloId") Long moduloId);
+	
+	boolean podeEditarCurso(Long usuarioId, Long cursoId);
+	
 	
 }
