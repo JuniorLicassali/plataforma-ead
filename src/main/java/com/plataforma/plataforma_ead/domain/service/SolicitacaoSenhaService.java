@@ -3,7 +3,6 @@ package com.plataforma.plataforma_ead.domain.service;
 import java.security.SecureRandom;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.plataforma.plataforma_ead.api.dto.input.EsqueciSenhaInput;
@@ -23,8 +22,6 @@ public class SolicitacaoSenhaService {
 	private final GerarCodigoSenhaService redisService;
     private final ApplicationEventPublisher eventPublisher;
     private final CadastroUsuarioService usuarioService;
-    private final PasswordEncoder passwordEncoder;
-    
 
     public void solicitar(String email) {
         String codigo = gerarCodigoAleatorio();
@@ -48,7 +45,7 @@ public class SolicitacaoSenhaService {
     	
     	Usuario usuario = usuarioService.buscarPorEmailOuFalhar(input.getEmail());
     	
-    	usuario.setSenha(passwordEncoder.encode(input.getNovaSenha()));
+    	usuario.setSenha(input.getNovaSenha());
     	
     	usuarioService.salvar(usuario);
     }

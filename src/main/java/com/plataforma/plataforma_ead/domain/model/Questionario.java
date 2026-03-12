@@ -27,7 +27,7 @@ public class Questionario {
 	private OffsetDateTime dataAbertura;
 	private OffsetDateTime dataFechamento;
 	
-	@OneToMany(mappedBy = "questionario", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "questionario", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Pergunta> perguntas = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "questionario", cascade = CascadeType.ALL)

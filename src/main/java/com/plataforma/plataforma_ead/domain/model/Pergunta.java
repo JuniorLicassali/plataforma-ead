@@ -29,7 +29,7 @@ public class Pergunta {
 	@Column(nullable = false)
 	private String enunciado;
 	
-	@OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PerguntaOpcao> opcoes = new ArrayList<>();
 	
 	@ManyToOne

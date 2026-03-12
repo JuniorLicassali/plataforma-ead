@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -41,39 +40,45 @@ import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 
 @Configuration
 public class AuthorizationServerConfig {
-
-	@Bean
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
-		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-				new OAuth2AuthorizationServerConfigurer();
-		
-		authorizationServerConfigurer
-        .authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
-
-    RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
-
-    http
-        .securityMatcher(request -> 
-            endpointsMatcher.matches(request) || 
-            request.getServletPath().equals("/login") ||
-            request.getServletPath().startsWith("/oauth2/authorized-clients")
-        )
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/login").permitAll()
-            .requestMatchers("/oauth2/authorized-clients/**").authenticated()
-            .anyRequest().authenticated()
-        )
-        .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
-        .formLogin(form -> form.loginPage("/login").permitAll())
-        .exceptionHandling(exceptions -> exceptions
-            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-        )
-        .with(authorizationServerConfigurer, Customizer.withDefaults());
-
-    return http.build();
-	}
 	
+	@Bean
+    @Order(1)
+    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+                new OAuth2AuthorizationServerConfigurer();
+        
+        authorizationServerConfigurer
+                .authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
+        
+        authorizationServerConfigurer.oidc(Customizer.withDefaults());
+
+        RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+
+        http
+            .securityMatcher(request ->
+                endpointsMatcher.matches(request) ||
+                request.getServletPath().equals("/sign-up") ||
+                request.getServletPath().equals("/usuarios") ||
+                request.getServletPath().equals("/login") ||
+                request.getServletPath().startsWith("/oauth2/authorized-clients") ||
+                request.getServletPath().startsWith("/swagger-ui.html/**") ||
+                request.getServletPath().startsWith("/v3/api-docs")
+            )
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/login", "/recuperar-senha/**", "/sign-up", "/usuarios").permitAll()
+                .requestMatchers("/oauth2/authorized-clients/**").authenticated()
+                .anyRequest().authenticated()
+            )
+            .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
+            .formLogin(form -> form.loginPage("/login").permitAll())
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+            )
+            .with(authorizationServerConfigurer, Customizer.withDefaults());
+
+        return http.build();
+    }
+
 	@Bean
 	public AuthorizationServerSettings providerSettings(PlataformaSecurityProperties properties) {
 		return AuthorizationServerSettings.builder()

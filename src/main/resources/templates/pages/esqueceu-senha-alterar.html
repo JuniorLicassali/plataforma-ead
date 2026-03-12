@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Alterar Senha</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: #e9ecef;
+			font-family: sans-serif;
+		}
+
+		.login-box {
+			background: white;
+			border-radius: 40px;
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+			width: 400px;
+			padding: 50px 40px;
+			text-align: center;
+		}
+
+		.form-control {
+			border-radius: 50px;
+			padding: 12px 25px;
+			height: auto;
+			border: 1px solid #ced4da;
+			background-color: #f8f9fa;
+		}
+
+		.form-control:focus {
+			box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+			border-color: #28a745;
+		}
+
+		.btn-success {
+			background-color: #28a745;
+			border: none;
+			padding: 14px;
+			font-weight: bold;
+			border-radius: 50px;
+			transition: all 0.3s ease;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			margin-top: 10px;
+		}
+
+		.btn-success:hover {
+			background-color: #218838;
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+		}
+
+		h2 {
+			color: #333;
+			font-weight: 800;
+			margin-bottom: 25px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="login-box">
+		<div class="login-form-area" style="width: 100%;">
+			<h2 class="mb-4">Alterar Senha</h2>
+
+			<form id="formAlterar" autocomplete="off">
+				<input type="hidden" id="csrf" th:if="${_csrf}" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+
+				<div class="form-group">
+					<input type="email" id="email" class="form-control" placeholder="Confirme seu e-mail" required
+						autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
+				</div>
+				<div class="form-group">
+					<input type="text" id="codigo" class="form-control" placeholder="Código recebido" required>
+				</div>
+				<div class="form-group">
+					<input type="password" id="novaSenha" class="form-control" placeholder="Nova senha" required
+						autocomplete="new-password">
+				</div>
+				<button type="button" onclick="alterarSenha()" class="btn btn-success btn-block">ALTERAR SENHA</button>
+			</form>
+			<div class="text-center mt-3">
+				<a th:href="@{/login}" class="text-muted small">Voltar ao Login</a>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		async function alterarSenha() {
+			const data = {
+				email: document.getElementById('email').value,
+				codigo: document.getElementById('codigo').value,
+				novaSenha: document.getElementById('novaSenha').value
+			};
+			const csrfElement = document.getElementById('csrf');
+			const token = csrfElement ? csrfElement.value : '';
+
+			const response = await fetch('/recuperar-senha/alterar', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-TOKEN': token
+				},
+				body: JSON.stringify(data)
+			});
+
+			if (response.ok) {
+				Swal.fire({
+					icon: 'success',
+					title: 'Tudo certo!',
+					text: 'Sua senha foi alterada com sucesso.',
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '/login';
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: 'Ops...',
+					text: 'Código inválido ou erro na alteração.'
+				});
+			}
+		}
+	</script>
+</body>
+
+</html>

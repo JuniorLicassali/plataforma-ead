@@ -82,13 +82,43 @@ public class CadastroQuestionarioService {
 		return questionario;
 	}
 	
+	@Transactional
+	public Questionario editarPergunta(Long cursoId, Long questionarioId, Pergunta pergunta, Long perguntaId) {
+		
+		Questionario questionario = questionarioRepository.findById(questionarioId)
+	            .orElseThrow(() -> new QuestionarioNaoEncontradoException("Questionário não encontrado"));
+
+	    Pergunta perguntaExistente = questionario.getPerguntas().stream()
+	            .filter(p -> p.getId().equals(perguntaId))
+	            .findFirst()
+	            .orElseThrow(() -> new NegocioException("Pergunta não encontrada"));
+
+	    perguntaExistente.setEnunciado(pergunta.getEnunciado());
+	    perguntaExistente.getOpcoes().clear();
+	    
+	    questionarioRepository.flush(); 
+
+	    pergunta.getOpcoes().forEach(nova -> {
+	        nova.setPergunta(perguntaExistente);
+	        perguntaExistente.getOpcoes().add(nova);
+	    });
+
+	    return questionarioRepository.save(questionario);
+	}
+	
+	@Transactional
+	public void excluirPergunta(Long cursoId, Long perguntaId) {
+		Questionario questionario = buscarOuFalhar(cursoId);
+		
+		questionario.getPerguntas().removeIf(p -> p.getId().equals(perguntaId));
+		
+		questionarioRepository.save(questionario);
+	}
 
 	@Transactional
 	public QuestionarioUsuario iniciarQuestionario(Long cursoId, Long usuarioId) {
         Curso curso = cursoRepository.findById(cursoId).orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
         
-//        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
-
         Matricula matricula = matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, cursoId)
         		.orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada para o curso e usuário"));
         

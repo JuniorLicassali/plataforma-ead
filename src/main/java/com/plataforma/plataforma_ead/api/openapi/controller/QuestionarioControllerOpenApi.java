@@ -51,6 +51,19 @@ public interface QuestionarioControllerOpenApi {
 	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação de novas perguntas", required = true))
 	public QuestionarioDTO adicionarPergunta(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @jakarta.validation.Valid PerguntaInput perguntaInput);
 	
+	@Operation(summary = "Atualiza pergunta de um questionario", responses = {
+			@ApiResponse(responseCode = "201", description = "Perguntas adicionadas"),
+	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação de novas perguntas", required = true))
+	public QuestionarioDTO atualizarPergunta(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @Parameter(description = "ID de uma pergunta", example = "1", required = true) Long perguntaId, @jakarta.validation.Valid PerguntaInput perguntaInput);
+
+	@Operation(summary = "Exclui uma pergunta por ID", responses = {
+			@ApiResponse(responseCode = "204", description = "Pergunta excluída"),
+			@ApiResponse(responseCode = "404", description = "Pergunta não encontrada", content = {
+					@Content(schema = @Schema(ref = "Problema"))
+			}),
+	})
+	public void excluirPergunta(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @Parameter(description = "ID de uma pergunta", example = "1", required = true) Long perguntaId);
+	
 	@Operation(summary = "Enviar respostas de um questionario iniciado", responses = {
 			@ApiResponse(responseCode = "201", description = "Respostas enviadas"),
 	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação das respostas do questionario", required = true))

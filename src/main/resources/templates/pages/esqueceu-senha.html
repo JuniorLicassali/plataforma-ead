@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Recuperar Senha</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e9ecef;
+        font-family: sans-serif;
+    }
+
+    .login-box {
+        background: white;
+        border-radius: 40px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        width: 400px;
+        padding: 50px 40px;
+        text-align: center;
+    }
+
+    .form-control {
+        border-radius: 50px;
+        padding: 12px 25px;
+        height: auto;
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        padding: 14px;
+        font-weight: bold;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .form-control:focus {
+			box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+			border-color: #28a745;
+		}
+
+    .btn-success:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    h2 { 
+        color: #333; 
+        font-weight: 800; 
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+
+<body>
+	<div class="login-box">
+		<div class="login-form-area" style="width: 100%;">
+			<h2 class="mb-4">Esqueceu sua senha?</h2>
+			<p class="text-muted">Informe seu e-mail para receber um código de recuperação.</p>
+
+			<form id="formRecuperacao" autocomplete="off">
+				<input type="hidden" id="csrf" th:if="${_csrf}" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+				<div class="form-group">
+					<input type="email" id="email" class="form-control" placeholder="Digite seu e-mail" required>
+				</div>
+				<button type="button" onclick="enviarEmail(event)" class="btn btn-success btn-block">ENVIAR
+					CÓDIGO</button>
+			</form>
+			<div class="text-center mt-3">
+				<a th:href="@{/login}" class="text-muted small">Voltar ao Login</a>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		async function enviarEmail(event) {
+			if (event) event.preventDefault();
+
+			const email = document.getElementById('email').value;
+			if (!email) {
+				Swal.fire({icon: 'warning', title: 'Atenção', text: 'Por favor, digite seu e-mail.'});
+				return;
+			}
+
+			const csrfElement = document.getElementById('csrf');
+			const token = csrfElement ? csrfElement.value : '';
+
+			Swal.showLoading();
+
+			try {
+				const response = await fetch('/recuperar-senha', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRF-TOKEN': token
+					},
+					body: JSON.stringify({email: email})
+				});
+
+				if (response.ok) {
+					Swal.fire({
+						icon: 'success',
+						title: 'E-mail enviado!',
+						text: 'Verifique sua caixa de entrada para obter o código.',
+						timer: 2500,
+						showConfirmButton: false
+					}).then(() => {
+						window.location.href = '/recuperar-senha/alterar';
+					});
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: 'Erro',
+						text: 'Não foi possível enviar o código. Tente novamente mais tarde.'
+					});
+				}
+			} catch (error) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Erro de conexão',
+					text: 'O servidor não respondeu.'
+				});
+			}
+		}
+	</script>
+</body>
+
+</html>

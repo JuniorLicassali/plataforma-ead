@@ -1,6 +1,6 @@
 package com.plataforma.plataforma_ead.core.security;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +17,12 @@ public class CorsConfig {
 	public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.setAllowedOrigins(Collections.singletonList("*"));
-		config.setAllowedMethods(Collections.singletonList("*"));
-		config.setAllowedHeaders(Collections.singletonList("*"));
+		config.setAllowedOrigins(Arrays.asList("http://local-plataforma.com:4200", "http://localhost:4200"));
+		//config.setAllowedMethods(Collections.singletonList("*"));
+		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+		//config.setAllowedHeaders(Collections.singletonList("*"));
+		config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
+		config.setExposedHeaders(Arrays.asList("Authorization"));
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);

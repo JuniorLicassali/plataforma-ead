@@ -1,18 +1,20 @@
 package com.plataforma.plataforma_ead.api.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.plataforma.plataforma_ead.api.assembler.PerguntaInputDisassembler;
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioInputDisassembler;
 import com.plataforma.plataforma_ead.api.assembler.QuestionarioUsuarioDTOAssembler;
@@ -27,7 +29,6 @@ import com.plataforma.plataforma_ead.api.openapi.controller.QuestionarioControll
 import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
-import com.plataforma.plataforma_ead.domain.model.PerguntaOpcao;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
 import com.plataforma.plataforma_ead.domain.service.CadastroQuestionarioService;
@@ -44,6 +45,7 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 	private final QuestionarioDTOAssembler questionarioDTOAssembler;
 	private final QuestionarioInputDisassembler questionarioInputDisassembler;
 	private final QuestionarioUsuarioDTOAssembler questionarioUsuarioAssembler;
+	private final PerguntaInputDisassembler perguntaInputDisassembler;
 	private final PlataformaSecurity plataformaSecurity;
 	
 	@CheckSecurity.Questionario.PodeEditar
@@ -81,28 +83,32 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 	@PostMapping("/{questionarioId}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public QuestionarioDTO adicionarPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @RequestBody @Valid PerguntaInput perguntaInput) {
-
-		Pergunta pergunta = new Pergunta();
-		pergunta.setEnunciado(perguntaInput.getEnunciado());
-		    
-		List<PerguntaOpcao> opcoes = perguntaInput.getOpcoes().stream()
-				.map(opcaoInput -> {
-		            PerguntaOpcao opcao = new PerguntaOpcao();
-		            opcao.setTexto(opcaoInput.getTexto());
-		            opcao.setIsCorreta(opcaoInput.getIsCorreta());
-		            return opcao;
-		        }).collect(Collectors.toList());
-		    
-		pergunta.setOpcoes(opcoes);
-	
-		Questionario questionario = questionarioService.buscarOuFalhar(questionarioId);
-		pergunta.setQuestionario(questionario);
-		questionario.getPerguntas().add(pergunta);
-
-		questionarioService.adicionarPerguntaAoQuestionario(cursoId, pergunta);
+		Pergunta pergunta = perguntaInputDisassembler.toDomainObject(perguntaInput);
+		
+		Questionario questionario = questionarioService.adicionarPerguntaAoQuestionario(cursoId, pergunta);
 
 		return questionarioDTOAssembler.toDTO(questionario);
 		
+	}
+	
+	@CheckSecurity.Questionario.PodeEditar
+	@Override
+	@PutMapping("/{questionarioId}/perguntas/{perguntaId}")
+	@ResponseStatus(HttpStatus.OK) 
+	public QuestionarioDTO atualizarPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @PathVariable Long perguntaId, @RequestBody @Valid PerguntaInput perguntaInput) {
+		Pergunta perguntaEdicao = perguntaInputDisassembler.toDomainObject(perguntaInput);
+		
+		Questionario questionario = questionarioService.editarPergunta(cursoId, questionarioId, perguntaEdicao, perguntaId);
+		
+		return questionarioDTOAssembler.toDTO(questionario);
+	}
+	
+	@CheckSecurity.Questionario.PodeEditar
+	@Override
+	@DeleteMapping("/{questionarioId}/perguntas/{perguntaId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT) 
+	public void excluirPergunta(@PathVariable Long cursoId, @PathVariable Long questionarioId, @PathVariable Long perguntaId) {
+		questionarioService.excluirPergunta(cursoId, perguntaId);
 	}
 
 	@CheckSecurity.Questionario.PodeConsultar
