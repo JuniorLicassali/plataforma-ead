@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.plataforma.plataforma_ead.api.assembler.CursoDTOAssembler;
 import com.plataforma.plataforma_ead.api.assembler.CursoInputDisassembler;
+import com.plataforma.plataforma_ead.api.assembler.CursoResumoDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.CursoDTO;
+import com.plataforma.plataforma_ead.api.dto.CursoResumoDTO;
 import com.plataforma.plataforma_ead.api.dto.input.CursoInput;
+import com.plataforma.plataforma_ead.api.openapi.controller.CursoControllerOpenApi;
 import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
@@ -29,17 +32,18 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping(path = "/cursos", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class CursoController implements com.plataforma.plataforma_ead.api.openapi.controller.CursoControllerOpenApi {
+public class CursoController implements CursoControllerOpenApi {
 	
 	private final CadastroCursoService cursoService;
 	private final CursoRepository cursoRepository;
 	private final CursoDTOAssembler cursoDTOAssembler;
+	private final CursoResumoDTOAssembler cursoResumoDTOAssembler;
 	private final CursoInputDisassembler cursoInputDisassembler;
 	
 	@Override
 	@GetMapping
-	public List<CursoDTO> listar() {
-		List<CursoDTO> cursos = cursoDTOAssembler.toCollectionDTO(cursoRepository.findAll());
+	public List<CursoResumoDTO> listar() {
+		List<CursoResumoDTO> cursos = cursoResumoDTOAssembler.toCollectionDTO(cursoRepository.findAll());
 		
 		return cursos;
 	}
@@ -53,7 +57,7 @@ public class CursoController implements com.plataforma.plataforma_ead.api.openap
 		return curso;
 	}
 	
-	@CheckSecurity.Curso.PodeEditar
+	@CheckSecurity.Curso.PodeCriar
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

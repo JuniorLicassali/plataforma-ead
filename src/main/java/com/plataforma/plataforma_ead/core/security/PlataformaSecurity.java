@@ -133,6 +133,12 @@ public class PlataformaSecurity {
 		
 	}
 	
+	public boolean podeCriarCurso() {
+		return temEscopoEscrita() && (
+				hasAuthority("EDITAR_CURSOS"));
+		
+	}
+	
 	public boolean podeListarPagamentos() {
 		return hasAuthority("CONSULTAR_PAGAMENTOS");
 	}

@@ -53,7 +53,7 @@ public class Curso {
 	@Column(name = "professor_id")
 	private Long professorId;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "questionario_id")
 	private Questionario questionario;
 	

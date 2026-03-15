@@ -3,6 +3,7 @@ package com.plataforma.plataforma_ead.api.openapi.controller;
 import java.util.List;
 
 import com.plataforma.plataforma_ead.api.dto.CursoDTO;
+import com.plataforma.plataforma_ead.api.dto.CursoResumoDTO;
 import com.plataforma.plataforma_ead.api.dto.input.CursoInput;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 public interface CursoControllerOpenApi {
 
 	@Operation(summary = "Lista todos os cursos")
-	public List<CursoDTO> listar();
+	public List<CursoResumoDTO> listar();
 	
 	@Operation(summary = "Busca o curso por ID", responses ={
 			@ApiResponse(responseCode = "200"),

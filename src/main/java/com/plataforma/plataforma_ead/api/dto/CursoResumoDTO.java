@@ -1,7 +1,6 @@
 package com.plataforma.plataforma_ead.api.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CursoDTO {
+public class CursoResumoDTO {
 
 	@Schema(example = "1")
 	private Long id;
@@ -26,6 +25,7 @@ public class CursoDTO {
 	@Schema(example = "true")
 	private Boolean ativo;
 	
-	private List<ModuloDTO> modulos;
+	@Schema(example = "Questionario de Administração.")
+	private QuestionarioDTO questionario;
 
 }

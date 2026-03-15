@@ -22,6 +22,11 @@ public @interface CheckSecurity {
 		@Target(METHOD)
 		public @interface PodeEditar { }
 		
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and @plataformaSecurity.podeCriarCurso()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeCriar { }
+		
 	}
 	
 	public @interface Aula {

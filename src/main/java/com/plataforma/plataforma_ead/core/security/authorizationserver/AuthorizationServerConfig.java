@@ -28,6 +28,7 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.nimbusds.jose.jwk.JWKSet;
@@ -43,32 +44,31 @@ public class AuthorizationServerConfig {
 	
 	@Bean
     @Order(1)
-    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authFilterChain(HttpSecurity http, CustomLogoutSuccessHandler logoutHandler) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 new OAuth2AuthorizationServerConfigurer();
         
         authorizationServerConfigurer
                 .authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
-        
-        authorizationServerConfigurer.oidc(Customizer.withDefaults());
 
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
         http
-            .securityMatcher(request ->
-                endpointsMatcher.matches(request) ||
-                request.getServletPath().equals("/sign-up") ||
-                request.getServletPath().equals("/usuarios") ||
-                request.getServletPath().equals("/login") ||
-                request.getServletPath().startsWith("/oauth2/authorized-clients") ||
-                request.getServletPath().startsWith("/swagger-ui.html/**") ||
-                request.getServletPath().startsWith("/v3/api-docs")
+            .securityMatcher(request -> endpointsMatcher.matches(request) || 
+                    new AntPathRequestMatcher("/**").matches(request)
             )
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login", "/recuperar-senha/**", "/sign-up", "/usuarios").permitAll()
+                .requestMatchers("/login", "/recuperar-senha/**", "/sign-up", "/usuarios","/.well-known/**").permitAll()
                 .requestMatchers("/oauth2/authorized-clients/**").authenticated()
                 .anyRequest().authenticated()
             )
+            .logout(logout -> logout
+            	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            	    .logoutSuccessHandler(logoutHandler)
+            	    .invalidateHttpSession(true)
+            	    .clearAuthentication(true)
+            	    .deleteCookies("JSESSIONID")
+            	)
             .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
             .formLogin(form -> form.loginPage("/login").permitAll())
             .exceptionHandling(exceptions -> exceptions
