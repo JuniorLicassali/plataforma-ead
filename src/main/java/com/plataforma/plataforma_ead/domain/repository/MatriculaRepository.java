@@ -18,6 +18,9 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long>, Jpa
 	@Query("SELECT m FROM Matricula m WHERE m.usuario.id = :usuarioId AND m.curso.id = :cursoId")
 	Optional<Matricula> findByUsuarioIdAndCursoId(@Param("usuarioId") Long usuarioId, @Param("cursoId") Long cursoId);
 	
+	@Query("select m.statusMatricula from Matricula m where m.usuario.id = :usuarioId and m.curso.id = :cursoId")
+	Optional<StatusMatricula> findByUsuarioAndCursoId(@Param("usuarioId") Long usuarioId, @Param("cursoId") Long cursoId);
+	
 	@Query("SELECT m FROM Matricula m WHERE m.usuario.id = :usuarioId AND m.curso.id = :cursoId AND m.statusMatricula = :status")
 	Optional<Matricula> findByUsuarioIdAndCursoIdAndStatus(@Param("usuarioId") Long usuarioId, @Param("cursoId") Long cursoId, @Param("status") StatusMatricula status);
 	

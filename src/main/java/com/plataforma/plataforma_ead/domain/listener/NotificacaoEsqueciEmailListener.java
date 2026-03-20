@@ -1,10 +1,10 @@
-package com.plataforma.plataforma_ead.domain.model.listener;
+package com.plataforma.plataforma_ead.domain.listener;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.plataforma.plataforma_ead.domain.model.event.EsqueciSenhaEvent;
+import com.plataforma.plataforma_ead.domain.event.EsqueciSenhaEvent;
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService;
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService.Mensagem;
 

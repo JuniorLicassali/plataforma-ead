@@ -5,7 +5,6 @@ import java.util.List;
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
 import com.plataforma.plataforma_ead.api.dto.QuestionarioUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
-import com.plataforma.plataforma_ead.api.dto.input.IdUsuarioAbrirQestionarioTesteInput;
 import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
 import com.plataforma.plataforma_ead.api.dto.input.QuestionarioInput;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
@@ -36,7 +35,7 @@ public interface QuestionarioControllerOpenApi {
 			@ApiResponse(responseCode = "404", description = "Questionario não encontrado", content = {
 					@Content(schema = @Schema(ref = "Problema")) }),
 	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Corpo do usuário", required = true))
-	public QuestionarioUsuarioDTO iniciarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @jakarta.validation.Valid IdUsuarioAbrirQestionarioTesteInput usuarioId);
+	public QuestionarioUsuarioDTO iniciarQuestionario(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId);
 	
 	@Operation(
 		    summary = "Cadastra um questionario", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(

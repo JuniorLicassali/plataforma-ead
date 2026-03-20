@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
+import com.plataforma.plataforma_ead.domain.event.CertificadoEmissaoEvent;
 import com.plataforma.plataforma_ead.domain.exception.CursoNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.exception.EntidadeEmUsoException;
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
@@ -22,7 +23,6 @@ import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.Pergunta;
 import com.plataforma.plataforma_ead.domain.model.Questionario;
 import com.plataforma.plataforma_ead.domain.model.QuestionarioUsuario;
-import com.plataforma.plataforma_ead.domain.model.event.CertificadoEmissaoEvent;
 import com.plataforma.plataforma_ead.domain.repository.CursoRepository;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.repository.QuestionarioRepository;
@@ -193,7 +193,7 @@ public class CadastroQuestionarioService {
         questionarioUsuario.setMatricula(matricula);
         questionarioUsuario.setQuestionario(questionario);
         questionarioUsuario.setDataAbertura(OffsetDateTime.now());
-        questionarioUsuario.setDataFechamento(OffsetDateTime.now().plusMinutes(1));
+        questionarioUsuario.setDataFechamento(OffsetDateTime.now().plusMinutes(60));
         
         return questionarioUsuario;
 	}

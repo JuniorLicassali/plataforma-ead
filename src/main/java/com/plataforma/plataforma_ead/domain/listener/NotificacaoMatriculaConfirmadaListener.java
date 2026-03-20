@@ -1,10 +1,10 @@
-package com.plataforma.plataforma_ead.domain.model.listener;
+package com.plataforma.plataforma_ead.domain.listener;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.plataforma.plataforma_ead.domain.event.MatriculaConfirmadaEvent;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
-import com.plataforma.plataforma_ead.domain.model.event.MatriculaConfirmadaEvent;
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService;
 import com.plataforma.plataforma_ead.domain.service.EnvioEmailService.Mensagem;
 

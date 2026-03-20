@@ -123,6 +123,10 @@ public class PlataformaSecurity {
 		return temEscopoLeitura() && hasAuthority("CONSULTAR_MATRICULAS");
 	}
 	
+	public boolean podeConsultarStatusMatricula(Long usuarioId) {
+		return temEscopoLeitura() || usuarioAutenticadoIgual(usuarioId);
+	}
+	
 	public boolean podeEditarCurso(Long cursoId) {
 		if (cursoId == null) {
 			return false;

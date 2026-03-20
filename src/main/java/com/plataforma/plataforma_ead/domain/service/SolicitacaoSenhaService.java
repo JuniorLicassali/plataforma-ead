@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.plataforma.plataforma_ead.api.dto.input.EsqueciSenhaInput;
 import com.plataforma.plataforma_ead.api.dto.input.NovaSenhaInput;
+import com.plataforma.plataforma_ead.domain.event.EsqueciSenhaEvent;
 import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Usuario;
-import com.plataforma.plataforma_ead.domain.model.event.EsqueciSenhaEvent;
 import com.plataforma.plataforma_ead.infrastructure.service.GerarCodigoSenhaService;
 
 import jakarta.transaction.Transactional;

@@ -14,7 +14,7 @@ public class MatriculaInput {
 	
 	//@NotNull
 	//@Schema(example = "1")
-    private Long usuarioId;
+    //private Long usuarioId;
     
     @Schema(example = "1")
     @NotNull

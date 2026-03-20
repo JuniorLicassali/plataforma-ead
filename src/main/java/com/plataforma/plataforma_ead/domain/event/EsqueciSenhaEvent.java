@@ -1,4 +1,4 @@
-package com.plataforma.plataforma_ead.domain.model.event;
+package com.plataforma.plataforma_ead.domain.event;
 
 import com.plataforma.plataforma_ead.api.dto.input.EsqueciSenhaInput;
 

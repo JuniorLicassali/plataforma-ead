@@ -27,5 +27,7 @@ public class CursoDTO {
 	private Boolean ativo;
 	
 	private List<ModuloDTO> modulos;
+	
+	private QuestionarioDTO questionario;
 
 }

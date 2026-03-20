@@ -54,6 +54,11 @@ public @interface CheckSecurity {
 		@Target(METHOD)
 		public @interface PodeConsultar { }
 		
+		@PreAuthorize("@plataformaSecurity.podeConsultarStatusMatricula(#usuarioId)")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultarStatusMatricula { }
+		
 		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated() and @plataformaSecurity.podeListarMatriculas()")
 		@Retention(RUNTIME)
 		@Target(METHOD)

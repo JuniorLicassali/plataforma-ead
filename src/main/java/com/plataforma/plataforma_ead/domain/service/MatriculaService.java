@@ -1,12 +1,12 @@
 package com.plataforma.plataforma_ead.domain.service;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.plataforma.plataforma_ead.domain.exception.MatriculaNaoEncontradaException;
-import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.exception.UsuarioNaoEncontradoException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
@@ -30,10 +30,10 @@ public class MatriculaService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
         
-        boolean usuarioJaMatriculado = matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, curso.getId()).isPresent();
+        Optional<Matricula> usuarioJaMatriculado = matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, curso.getId());
         
-        if (usuarioJaMatriculado) {
-            throw new NegocioException("O usuário já está matriculado neste curso.");
+        if (usuarioJaMatriculado.isPresent()) {
+            return usuarioJaMatriculado.get();
         }
 
         Matricula matricula = new Matricula();
@@ -60,6 +60,13 @@ public class MatriculaService {
         matricula.confirmar();
         matriculaRepository.save(matricula);
     }
+	
+	public StatusMatricula buscarStatusDoUsuarioNoCurso(Long usuarioId, Long cursoId) {
+		StatusMatricula statusMatricula = matriculaRepository.findByUsuarioAndCursoId(usuarioId, cursoId)
+				.orElseThrow(() -> new MatriculaNaoEncontradaException("Matricula não encontrada"));
+		
+		return statusMatricula;
+	}
 	
 	public Matricula buscarOuFalhar(Long matriculaId) {
 		return matriculaRepository.findById(matriculaId).orElseThrow(() -> new MatriculaNaoEncontradaException(matriculaId));

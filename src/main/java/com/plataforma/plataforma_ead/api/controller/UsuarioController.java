@@ -112,14 +112,10 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	@PostMapping("/{usuarioId}/matriculas")
 	@ResponseStatus(HttpStatus.CREATED)
 	public MatriculaDTO matricularUsuario(@PathVariable Long usuarioId, @RequestBody @Valid MatriculaInput matriculaInput) throws Exception {
-		Long idDoUsuarioLogado = plataformaSecurity.getUsuarioId();
+		//Long idDoUsuarioLogado = plataformaSecurity.getUsuarioId();
 		Curso curso = cursoService.buscarOuFalhar(matriculaInput.getCursoId());
 		
-		if(curso.getAtivo() != true) {
-			throw new NegocioException("Curso inativo");
-		}
-		
-		Matricula matricula = matriculaService.matricularUsuario(idDoUsuarioLogado, curso);
+		Matricula matricula = matriculaService.matricularUsuario(usuarioId, curso);
 		
 		return matriculaDTOAssembler.toDTO(matricula);
 	}

@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
-import com.plataforma.plataforma_ead.domain.model.event.MatriculaConfirmadaEvent;
+import com.plataforma.plataforma_ead.domain.event.MatriculaConfirmadaEvent;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

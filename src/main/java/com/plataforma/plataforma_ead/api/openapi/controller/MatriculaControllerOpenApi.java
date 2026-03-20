@@ -3,6 +3,7 @@ package com.plataforma.plataforma_ead.api.openapi.controller;
 import java.util.List;
 
 import com.plataforma.plataforma_ead.api.dto.MatriculaDTO;
+import com.plataforma.plataforma_ead.api.dto.StatusMatriculaDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,5 +28,12 @@ public interface MatriculaControllerOpenApi {
 					@Content(schema = @Schema(ref = "Problema")) }),
 	})
 	public MatriculaDTO buscar(@Parameter(description = "Código do curso", example = "1", required = true) Long matriculaId);
+
+	@Operation(summary = "Busca o status da matrícula de um usuário em um curso", responses = {
+	        @ApiResponse(responseCode = "200"),
+	        @ApiResponse(responseCode = "404", description = "Matrícula não encontrada", content = {
+	            @Content(schema = @Schema(ref = "Problema")) })
+	    })
+	public StatusMatriculaDTO buscarStatus(@Parameter(description = "ID do usuário", example = "1", required = true) Long usuarioId, @Parameter(description = "Código do curso", example = "1", required = true) Long cursoId);
 
 }

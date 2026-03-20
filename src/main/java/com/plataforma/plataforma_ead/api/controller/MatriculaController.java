@@ -6,13 +6,17 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plataforma.plataforma_ead.api.assembler.MatriculaDTOAssembler;
+import com.plataforma.plataforma_ead.api.assembler.StatusMatriculaDTOAssembler;
 import com.plataforma.plataforma_ead.api.dto.MatriculaDTO;
+import com.plataforma.plataforma_ead.api.dto.StatusMatriculaDTO;
 import com.plataforma.plataforma_ead.api.openapi.controller.MatriculaControllerOpenApi;
 import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
+import com.plataforma.plataforma_ead.domain.model.StatusMatricula;
 import com.plataforma.plataforma_ead.domain.repository.MatriculaRepository;
 import com.plataforma.plataforma_ead.domain.service.MatriculaService;
 
@@ -26,6 +30,7 @@ public class MatriculaController implements MatriculaControllerOpenApi {
 	private final MatriculaService matriculaService;
 	private final MatriculaDTOAssembler matriculaDTOAssembler;
 	private final MatriculaRepository matriculaRepository;
+	private final StatusMatriculaDTOAssembler statusMatriculaDTOAssembler;
 	
 	@CheckSecurity.Matricula.PodeListar
 	@Override
@@ -43,6 +48,15 @@ public class MatriculaController implements MatriculaControllerOpenApi {
 		Matricula matricula = matriculaService.buscarOuFalhar(matriculaId);
 		
 		return matriculaDTOAssembler.toDTO(matricula);
+	}
+	
+	@CheckSecurity.Matricula.PodeConsultarStatusMatricula
+	@Override
+	@GetMapping("/status")
+	public StatusMatriculaDTO buscarStatus(@RequestParam Long usuarioId, @RequestParam Long cursoId) {
+		StatusMatricula status = matriculaService.buscarStatusDoUsuarioNoCurso(usuarioId, cursoId);
+		
+		return statusMatriculaDTOAssembler.toDTO(status);
 	}
 	
 }

@@ -41,110 +41,107 @@ import com.plataforma.plataforma_ead.domain.repository.UsuarioRepository;
 
 @Configuration
 public class AuthorizationServerConfig {
-	
+
 	@Bean
-    @Order(1)
-    public SecurityFilterChain authFilterChain(HttpSecurity http, CustomLogoutSuccessHandler logoutHandler) throws Exception {
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-                new OAuth2AuthorizationServerConfigurer();
-        
-        authorizationServerConfigurer
-                .authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
+	@Order(1)
+	public SecurityFilterChain authFilterChain(HttpSecurity http, CustomLogoutSuccessHandler logoutHandler)
+			throws Exception {
+		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-        RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+		authorizationServerConfigurer.authorizationEndpoint(customizer -> customizer.consentPage("/oauth2/consent"));
 
-        http
-            .securityMatcher(request -> endpointsMatcher.matches(request) || 
-                    new AntPathRequestMatcher("/**").matches(request)
-            )
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login", "/recuperar-senha/**", "/sign-up", "/usuarios","/.well-known/**").permitAll()
-                .requestMatchers("/oauth2/authorized-clients/**").authenticated()
-                .anyRequest().authenticated()
-            )
-            .logout(logout -> logout
-            	    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            	    .logoutSuccessHandler(logoutHandler)
-            	    .invalidateHttpSession(true)
-            	    .clearAuthentication(true)
-            	    .deleteCookies("JSESSIONID")
-            	)
-            .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
-            .formLogin(form -> form.loginPage("/login").permitAll())
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-            )
-            .with(authorizationServerConfigurer, Customizer.withDefaults());
+		RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
-        return http.build();
-    }
+		http.securityMatcher(request -> endpointsMatcher.matches(request) || request.getServletPath().equals("/sign-up")
+				|| request.getServletPath().equals("/usuarios") || request.getServletPath().equals("/login")
+				|| request.getServletPath().equals("/logout")
+				|| request.getServletPath().equals("/payments-webhook")
+				|| request.getServletPath().startsWith("/oauth2/authorized-clients")
+				|| request.getServletPath().startsWith("/swagger-ui/**")
+				|| request.getServletPath().startsWith("/.well-known")
+				|| request.getServletPath().startsWith("/v3/api-docs/**"))
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers("/payments-webhook").permitAll()
+						.requestMatchers("/login", "/recuperar-senha/**", "/sign-up", "/usuarios", "/.well-known/**")
+						.permitAll().requestMatchers("/oauth2/authorized-clients/**").authenticated().anyRequest()
+						.authenticated())
+				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessHandler(logoutHandler)
+						.invalidateHttpSession(true)
+						.clearAuthentication(true)
+						.deleteCookies("JSESSIONID"))
+				.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher, new AntPathRequestMatcher("/payments-webhook")))
+				.formLogin(form -> form.loginPage("/login").permitAll())
+				.exceptionHandling(exceptions -> exceptions
+						.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+				.with(authorizationServerConfigurer, Customizer.withDefaults());
+
+		return http.build();
+	}
 
 	@Bean
 	public AuthorizationServerSettings providerSettings(PlataformaSecurityProperties properties) {
-		return AuthorizationServerSettings.builder()
-				.issuer(properties.getProviderUrl())
-				.build();
+		return AuthorizationServerSettings.builder().issuer(properties.getProviderUrl()).build();
 	}
-	
+
 	@Bean
-	public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, JdbcOperations jdbcOperations) {
-		
+	public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder,
+			JdbcOperations jdbcOperations) {
+
 		return new JdbcRegisteredClientRepository(jdbcOperations);
 	}
-	
+
 	@Bean
-    public OAuth2AuthorizationService oAuth2AuthorizationService(JdbcOperations jdbcOperations,
-                                                                 RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(
-                jdbcOperations,
-                registeredClientRepository
-        );
-    }
-	
+	public OAuth2AuthorizationService oAuth2AuthorizationService(JdbcOperations jdbcOperations,
+			RegisteredClientRepository registeredClientRepository) {
+		return new JdbcOAuth2AuthorizationService(jdbcOperations, registeredClientRepository);
+	}
+
 	@Bean
 	public JWKSource<SecurityContext> jwkSource(JwtKeyStoreProperties properties) throws Exception {
 		char[] keyStorePass = properties.getPassword().toCharArray();
 		String keypairAlias = properties.getKeyPairAlias();
-		
+
 		Resource jksLocation = properties.getJksLocation();
 		InputStream inputStream = jksLocation.getInputStream();
 		KeyStore keyStore = KeyStore.getInstance("JKS");
 		keyStore.load(inputStream, keyStorePass);
-		
+
 		RSAKey rsaKey = RSAKey.load(keyStore, keypairAlias, keyStorePass);
-		
+
 		return new ImmutableJWKSet<>(new JWKSet(rsaKey));
 	}
-	
+
 	@Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer(UsuarioRepository usuarioRepository) {
-        return context -> {
-            Authentication authentication = context.getPrincipal();
-            if (authentication.getPrincipal() instanceof User) {
-                User user = (User) authentication.getPrincipal();
+	public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer(UsuarioRepository usuarioRepository) {
+		return context -> {
+			Authentication authentication = context.getPrincipal();
+			if (authentication.getPrincipal() instanceof User) {
+				User user = (User) authentication.getPrincipal();
 
-                Usuario usuario = usuarioRepository.findByEmail(user.getUsername()).orElseThrow();
+				Usuario usuario = usuarioRepository.findByEmail(user.getUsername()).orElseThrow();
 
-                Set<String> authorities = new HashSet<>();
-                for (GrantedAuthority authority : user.getAuthorities()) {
-                    authorities.add(authority.getAuthority());
-                }
+				Set<String> authorities = new HashSet<>();
+				for (GrantedAuthority authority : user.getAuthorities()) {
+					authorities.add(authority.getAuthority());
+				}
 
-                context.getClaims().claim("usuario_id", usuario.getId().toString());
-                context.getClaims().claim("authorities", authorities);
-            }
-        };
-    }
-	
+				context.getClaims().claim("usuario_id", usuario.getId().toString());
+				context.getClaims().claim("authorities", authorities);
+			}
+		};
+	}
+
 	@Bean
-	public OAuth2AuthorizationConsentService consentService(JdbcOperations jdbcOperation, 
+	public OAuth2AuthorizationConsentService consentService(JdbcOperations jdbcOperation,
 			RegisteredClientRepository clientRepository) {
 		return new JdbcOAuth2AuthorizationConsentService(jdbcOperation, clientRepository);
 	}
-	
+
 	@Bean
-	public Oauth2AuthorizationQueryService auth2AuthorizationQueryService(JdbcOperations jdbcOperations, RegisteredClientRepository repository) {
+	public Oauth2AuthorizationQueryService auth2AuthorizationQueryService(JdbcOperations jdbcOperations,
+			RegisteredClientRepository repository) {
 		return new JdbcOauth2AuthorizationQueryService(jdbcOperations, repository);
 	}
-	
+
 }

@@ -21,7 +21,6 @@ import com.plataforma.plataforma_ead.api.assembler.QuestionarioUsuarioDTOAssembl
 import com.plataforma.plataforma_ead.api.dto.QuestionarioDTO;
 import com.plataforma.plataforma_ead.api.dto.QuestionarioUsuarioDTO;
 import com.plataforma.plataforma_ead.api.dto.RespostaDTO;
-import com.plataforma.plataforma_ead.api.dto.input.IdUsuarioAbrirQestionarioTesteInput;
 import com.plataforma.plataforma_ead.api.dto.input.PerguntaInput;
 import com.plataforma.plataforma_ead.api.dto.input.QuestionarioInput;
 import com.plataforma.plataforma_ead.api.dto.input.RespostaInput;
@@ -60,9 +59,9 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 	@CheckSecurity.Questionario.PodeConsultar
 	@Override
 	@GetMapping
-	public QuestionarioUsuarioDTO iniciarQuestionario(@PathVariable Long cursoId, @RequestBody IdUsuarioAbrirQestionarioTesteInput usuarioId) {
+	public QuestionarioUsuarioDTO iniciarQuestionario(@PathVariable Long cursoId) {
 		
-		QuestionarioUsuario questionarioUsuario = questionarioService.iniciarQuestionario(cursoId, usuarioId.getUsuarioId());
+		QuestionarioUsuario questionarioUsuario = questionarioService.iniciarQuestionario(cursoId, plataformaSecurity.getUsuarioId());
 		
 		return questionarioUsuarioAssembler.toDTO(questionarioUsuario);
 	}

@@ -18,31 +18,34 @@ import com.plataforma.plataforma_ead.domain.model.Questionario;
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long>, JpaSpecificationExecutor<Curso> {
 
-	@Query("SELECT q FROM Curso c JOIN c.questionario q WHERE c.id = :cursoId")
+	@Query("select q from Curso c join c.questionario q where c.id = :cursoId")
 	Optional<Questionario> findQuestionarioById(@Param("cursoId") Long cursoId);
 	
-	@Query("SELECT c FROM Curso c JOIN FETCH c.questionario WHERE c.id = :cursoId")
+	@Query("select c from Curso c join FETCH c.questionario where c.id = :cursoId")
 	Optional<Curso> findCursoComQuestionario(@Param("cursoId") Long cursoId);
 	
-	@Query("SELECT m FROM Curso c JOIN c.modulos m WHERE m.id = :moduloId")
+	@Query("select m from Curso c join c.modulos m where m.id = :moduloId")
 	Optional<Modulo> findModuloById(@Param("moduloId") Long moduloId);
 	
-	@Query("SELECT a FROM Curso c JOIN c.modulos.aulas a WHERE a.id = :aulaId")
+	@Query("select a from Curso c join c.modulos.aulas a where a.id = :aulaId")
 	Optional<Aula> findAulaById(@Param("aulaId") Long aulaId);
 	
-	@Query("SELECT m FROM Curso c JOIN c.modulos m WHERE c.id = :cursoId")
+	@Query("select m from Curso c join c.modulos m where c.id = :cursoId")
     List<Modulo> findAllModulosByCursoId(@Param("cursoId") Long cursoId);
 	
+	@Query("select c from Curso c join Matricula m on m.curso.id = c.id where m.usuario.id = :usuarioId")
+	List<Curso> findCursosByUsuarioId(@Param("usuarioId") Long usuarioId);
+	
 	@Modifying
-    @Query("DELETE FROM Aula a WHERE a.modulo.id = :moduloId")
+    @Query("delete from Aula a where a.modulo.id = :moduloId")
     void deleteAulasByModuloId(@Param("moduloId") Long moduloId);
 	
 	@Modifying
-	@Query("DELETE FROM Aula a WHERE a.id = :aulaId")
+	@Query("delete from Aula a where a.id = :aulaId")
 	void deleteAulaById(@Param("aulaId") Long aulaId);
 	
 	@Modifying
-    @Query("DELETE FROM Modulo m WHERE m.id = :moduloId")
+    @Query("delete from Modulo m where m.id = :moduloId")
     void deleteModuloById(@Param("moduloId") Long moduloId);
 	
 	boolean podeEditarCurso(Long usuarioId, Long cursoId);
