@@ -33,8 +33,9 @@ public class GerarCertificadoService {
 	private static final double NOTA_MINIMA = 7.0;
     private static final String BACKGROUND_PATH = "Certificado.png";
     
-    public byte[] gerarCertificado(Long matriculaId) throws Exception {
-        Matricula matricula = validarMatricula(matriculaId);
+    public byte[] gerarCertificado(Long usuarioId, Long cursoId) throws Exception {
+        Matricula matricula = validarMatricula(usuarioId, cursoId);
+        
         DadosCertificado dados = extrairDadosCertificado(matricula);
         
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -52,10 +53,13 @@ public class GerarCertificadoService {
         return pdfBytes;
     }
     
-    private Matricula validarMatricula(Long matriculaId) {
-        Matricula matricula = matriculaService.buscarOuFalhar(matriculaId);
+    private Matricula validarMatricula(Long usuarioId, Long cursoId) {
+        Matricula matricula = matriculaService.buscarOuFalhar(usuarioId, cursoId);
+        
+        
+        
         if (matricula == null) {
-            throw new MatriculaNaoEncontradaException("Matrícula não encontrada com ID: " + matriculaId);
+            throw new MatriculaNaoEncontradaException("Matrícula não encontrada com ID: ");
         }
 
         if (matricula.getStatusMatricula() != StatusMatricula.PAGAMENTO_CONFIRMADO) {
@@ -80,7 +84,7 @@ public class GerarCertificadoService {
         int cargaHoraria = 64; // Pode ser dinâmico: matricula.getCurso().getCargaHoraria();
         String textoPrincipal = "Certificamos que o aluno " + nomeUsuario.toUpperCase() +
                 " concluiu o curso de " + nomeCurso.toLowerCase() +
-                " da Tal Tal, no total de " + cargaHoraria + " horas.";
+                " em nossa Plataforma de ensino EAD, no total de " + cargaHoraria + " horas.";
         return new DadosCertificado(nomeUsuario, nomeCurso, cargaHoraria, textoPrincipal);
     }
 

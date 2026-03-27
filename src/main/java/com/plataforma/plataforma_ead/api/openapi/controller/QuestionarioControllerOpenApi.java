@@ -68,4 +68,14 @@ public interface QuestionarioControllerOpenApi {
 	}, requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Representação das respostas do questionario", required = true))
 	public List<RespostaDTO> enviarRespostas(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um questionario", example = "1", required = true) Long questionarioId, @jakarta.validation.Valid List<RespostaInput> respostasInput) throws Exception;
 
+	@Operation(summary = "Verifica o status de aprovação do usuário em um curso", responses = {
+		    @ApiResponse(responseCode = "200", description = "Status verificado com sucesso"),
+		    @ApiResponse(responseCode = "404", description = "Matrícula ou questionário não encontrado", content = {
+		        @Content(schema = @Schema(ref = "Problema"))
+		    }),
+		    @ApiResponse(responseCode = "400", description = "ID do curso inválido", content = {
+		        @Content(schema = @Schema(ref = "Problema"))
+		    })
+		})
+	public QuestionarioUsuarioDTO verificarAprovacao(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId);
 }

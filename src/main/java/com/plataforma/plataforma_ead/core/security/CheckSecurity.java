@@ -127,6 +127,11 @@ public @interface CheckSecurity {
 		@Target(METHOD)
 		public @interface PodeEditar { }
 		
+		
+		@PreAuthorize("@plataformaSecurity.podeConsultarFoto()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeConsultar { }
 	}
 		
 	
@@ -141,17 +146,19 @@ public @interface CheckSecurity {
 		public @interface PodeAlterarPropriaSenha { }
 		
 		@PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES') or "
-				+ "@plataformaSecurity.getUsuarioAutenticado(#usuarioId))")
+				+ "@plataformaSecurity.usuarioAutenticadoIgual(#usuarioId))")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeAlterarUsuario { }
 		
-		@PreAuthorize("@plataformaSecurity.podeEditarUsuariosGruposPermissoes()")
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
+				+ "@plataformaSecurity.usuarioAutenticadoIgual(#usuarioId)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeEditar { }
 		
-		@PreAuthorize("@plataformaSecurity.podeConsultarUsuariosGruposPermissoes()")
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
+				+ "@plataformaSecurity.usuarioAutenticadoIgual(#usuarioId)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeConsultar { }

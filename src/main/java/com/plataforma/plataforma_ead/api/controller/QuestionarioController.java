@@ -122,4 +122,14 @@ public class QuestionarioController implements QuestionarioControllerOpenApi {
 	    return resultados;
 	}
 	
+	@CheckSecurity.Questionario.PodeEditar
+	@Override
+	@GetMapping("/resultado")
+	public QuestionarioUsuarioDTO verificarAprovacao(@PathVariable Long cursoId) {
+		Long usuarioId = plataformaSecurity.getUsuarioId();
+		QuestionarioUsuarioDTO qu = questionarioUsuarioAssembler.toDTO(questionarioService.verificarResultado(usuarioId, cursoId));
+		
+		return qu;
+	}
+	
 }

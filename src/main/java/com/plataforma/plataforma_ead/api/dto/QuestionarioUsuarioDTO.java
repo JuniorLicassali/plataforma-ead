@@ -24,4 +24,6 @@ public class QuestionarioUsuarioDTO {
 	@Schema(example = "true")
     private Boolean finalizado;
 	
+	private Double nota;
+	
 }

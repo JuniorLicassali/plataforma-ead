@@ -78,7 +78,7 @@ public class ModuloController implements ModuloControllerOpenApi {
 	@Override
 	@DeleteMapping("/{moduloId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void excluir(@PathVariable Long moduloId) {
+	public void excluir(@PathVariable Long cursoId, @PathVariable Long moduloId) {
 		moduloService.excluir(moduloId);
 	}
 	

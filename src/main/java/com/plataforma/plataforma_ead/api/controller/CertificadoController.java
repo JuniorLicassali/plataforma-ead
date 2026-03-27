@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plataforma.plataforma_ead.api.openapi.controller.CertificadoControllerOpenApi;
+import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
 import com.plataforma.plataforma_ead.domain.service.GerarCertificadoService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class CertificadoController implements CertificadoControllerOpenApi {
 
     private final GerarCertificadoService certificadoService;
+    private final PlataformaSecurity plataformaSecurity;
 
 	@Override
-    @GetMapping(value= "/matriculas/{matriculaId}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<Resource> emitirCertificado(@PathVariable Long matriculaId) throws Exception {
+    @GetMapping(value= "/cursos/{cursoId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<Resource> emitirCertificado(@PathVariable Long cursoId) throws Exception {
 
-        byte[] certificadoBytes = certificadoService.gerarCertificado(matriculaId);
+        byte[] certificadoBytes = certificadoService.gerarCertificado(plataformaSecurity.getUsuarioId(), cursoId);
 
         ByteArrayResource resource = new ByteArrayResource(certificadoBytes);
 

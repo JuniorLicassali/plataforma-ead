@@ -68,6 +68,10 @@ public class MatriculaService {
 		return statusMatricula;
 	}
 	
+	public Matricula buscarOuFalhar(Long usuarioId, Long cursoId) {
+		return matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, cursoId).orElseThrow(() -> new MatriculaNaoEncontradaException("Matricula não encontrada"));
+	}
+	
 	public Matricula buscarOuFalhar(Long matriculaId) {
 		return matriculaRepository.findById(matriculaId).orElseThrow(() -> new MatriculaNaoEncontradaException(matriculaId));
 	}

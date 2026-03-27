@@ -179,6 +179,24 @@ public class CadastroQuestionarioService {
 		return resultados;
 	}
 	
+	public QuestionarioUsuario verificarResultado(Long usuarioId, Long cursoId) {
+
+		Matricula matricula = matriculaRepository.findByUsuarioIdAndCursoId(usuarioId, cursoId)
+
+		.orElseThrow(() -> new MatriculaNaoEncontradaException("Matrícula não encontrada"));
+
+
+		QuestionarioUsuario qu = matricula.getQuestionarioUsuario();
+		
+		if ( qu == null) {
+			throw new NegocioException("Usuário ainda não realizou a prova");
+		}
+
+
+		return qu;
+
+		}
+	
 	
 	
 	private QuestionarioUsuario buscarQuestionarioExistente(Matricula matricula, Questionario questionario) {

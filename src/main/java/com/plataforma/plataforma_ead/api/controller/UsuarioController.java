@@ -25,7 +25,6 @@ import com.plataforma.plataforma_ead.api.dto.input.UsuarioInput;
 import com.plataforma.plataforma_ead.api.openapi.controller.UsuarioControllerOpenApi;
 import com.plataforma.plataforma_ead.core.security.CheckSecurity;
 import com.plataforma.plataforma_ead.core.security.PlataformaSecurity;
-import com.plataforma.plataforma_ead.domain.exception.NegocioException;
 import com.plataforma.plataforma_ead.domain.model.Curso;
 import com.plataforma.plataforma_ead.domain.model.Matricula;
 import com.plataforma.plataforma_ead.domain.model.Usuario;

@@ -2,6 +2,12 @@
 
 Uma plataforma completa de ensino a distância focada em automação. Ideal para mentores e professores que desejam escalar seus conteúdos, permitindo que o aluno siga seu próprio ritmo, desde a matrícula até a emissão automática do certificado.
 
+> **💻 Front-end Disponível:** Este projeto possui uma interface completa e responsiva desenvolvida em **Angular 21**. 
+> 
+> 👉 **https://github.com/JuniorLicassali/plataforma-ead-ui**
+
+---
+
 # 🛠️ Tecnologias e Integrações
 
 - Linguagem & Framework: Java 17 com Spring Boot.

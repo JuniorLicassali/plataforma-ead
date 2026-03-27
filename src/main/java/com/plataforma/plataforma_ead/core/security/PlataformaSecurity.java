@@ -91,6 +91,10 @@ public class PlataformaSecurity {
 	public boolean podeEditarFotoUsuario() {
 		return temEscopoEscrita() && usuarioRepository.podeEditarFoto(getUsuarioId());
 	}
+	
+	public boolean podeConsultarFoto() {
+		return temEscopoLeitura() && isAutenticado();
+	} 
 
 	public boolean podeConsultarUsuariosGruposPermissoes() {
 		return temEscopoLeitura() && hasAuthority("CONSULTAR_USUARIOS_GRUPOS_PERMISSOES");

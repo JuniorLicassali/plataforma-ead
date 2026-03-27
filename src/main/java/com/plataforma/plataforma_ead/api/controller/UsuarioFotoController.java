@@ -72,9 +72,9 @@ public class UsuarioFotoController implements UsuarioFotoControllerOpenApi {
 		catalogoFotoUsuario.excluir(usuarioId);
 	}
 	
-	@CheckSecurity.FotoUsuario.PodeEditar
+	@CheckSecurity.FotoUsuario.PodeConsultar
 	@Override
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public FotoUsuarioDTO buscar(@PathVariable Long usuarioId) {
 		FotoUsuario fotoUsuario = catalogoFotoUsuario.buscarOuFalhar(usuarioId);
 		

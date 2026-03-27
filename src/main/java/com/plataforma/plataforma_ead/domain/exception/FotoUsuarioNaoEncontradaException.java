@@ -9,7 +9,7 @@ public class FotoUsuarioNaoEncontradaException extends EntidadeNaoEncontradaExce
 	}
 
 	public FotoUsuarioNaoEncontradaException(Long usuarioId) {
-		this(String.format("Não existe um cadastro de foto do produto com código %d para o restaurante de código %d", usuarioId));
+		this(String.format("Não existe um cadastro de foto do usuário com código %d", usuarioId));
 	}
 
 }

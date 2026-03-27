@@ -40,7 +40,9 @@ public class CadastroUsuarioService {
 					usuario.getEmail()));
 		}
 		
-		usuario.setSenha(passwordencoder.encode(usuario.getSenha()));
+		if (usuario.getId() == null) {
+	        usuario.setSenha(passwordencoder.encode(usuario.getSenha()));
+	    }
 
 		return usuarioRepository.save(usuario);
 	}
@@ -49,7 +51,7 @@ public class CadastroUsuarioService {
 	public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha) {
 		Usuario usuario  = buscarOuFalhar(usuarioId);
 
-		if (usuario.senhaNaoCoincideCom(senhaAtual)) {
+		if (!passwordencoder.matches(senhaAtual, usuario.getSenha())) {
 			throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
 		}
 

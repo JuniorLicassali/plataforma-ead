@@ -51,6 +51,6 @@ public interface ModuloControllerOpenApi {
 	@Operation(summary = "Exclui um módulo por ID", responses = {
 			@ApiResponse(responseCode = "204")
 	})
-	public void excluir(@Parameter(description = "ID de um módulo", example = "1", required = true) Long moduloId);
+	public void excluir(@Parameter(description = "ID de um curso", example = "1", required = true) Long cursoId, @Parameter(description = "ID de um módulo", example = "1", required = true) Long moduloId);
 	
 }

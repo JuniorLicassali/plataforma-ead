@@ -14,6 +14,7 @@ delete from questionario_usuario;
 delete from curso;
 delete from modulo;
 delete from aula;
+delete from foto_usuario;
 delete from oauth2_registered_client;
 
 set foreign_key_checks = 1;
@@ -95,7 +96,13 @@ insert into curso (id, nome, descricao, preco, ativo, data_criacao) values (23, 
 
 insert into modulo (id, nome, descricao, ordem, curso_id) values 
 (1, 'Módulo 01: Configuração e Setup', 'Preparando o ambiente de desenvolvimento', 1, 1),
-(2, 'Módulo 02: REST e Controllers', 'Criação de endpoints e verbos HTTP', 2, 1);
+(2, 'Módulo 02: REST e Controllers', 'Criação de endpoints e verbos HTTP', 2, 1),
+(3, 'Módulo 03: Persistência com Spring Data JPA', 'Conectando a base de dados e criando repositórios', 3, 1),
+(4, 'Módulo 04: Tratamento de Erros e Validação', 'Refinando a API e tratando exceções', 4, 1),
+(5, 'Módulo 05: Autenticação com Spring Security', 'Protegendo endpoints e gerando Tokens JWT', 5, 1),
+(6, 'Módulo 06: Testes Automatizados', 'Garantindo a qualidade com JUnit e Mockito', 6, 1),
+(7, 'Módulo 07: Documentação com Swagger', 'Gerando documentação interativa da API', 7, 1),
+(8, 'Módulo 08: Deploy e CI/CD', 'Colocando a aplicação em produção', 8, 1);
 
 insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
 (101, 'Instalação do JDK e Maven', 'Configurando variáveis de ambiente', 1, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 1),
@@ -104,6 +111,30 @@ insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values
 insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
 (201, 'Criando @RestController', 'Mapeando as primeiras rotas', 1, 'https://res.cloudinary.com/demo/video/upload/v1/samples/elephants.mp4', 2),
 (202, 'Request Body e Response Entity', 'Manipulando entradas e saídas', 2, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 2);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(301, 'Configuração do Banco H2', 'Configurando o application.properties', 1, 'https://res.cloudinary.com/demo/video/upload/v1/samples/elephants.mp4', 3),
+(302, 'Criação de Entidades e Repository', 'Mapeamento objeto-relacional', 2, 'https://res.cloudinary.com/demo/video/upload/v1/samples/sea-turtle.mp4', 3);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(401, 'Bean Validation com Hibernate Validator', 'Usando anotações como @NotNull e @Size', 1, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 4),
+(402, 'Customizando o Exception Handler', 'Retornando mensagens amigáveis no JSON', 2, 'https://res.cloudinary.com/demo/video/upload/v1/samples/elephants.mp4', 4);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(501, 'Configurando o SecurityFilterChain', 'Filtros e permissões de acesso', 1, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 5),
+(502, 'Lógica de Login e JWT', 'Gerando o token para o frontend', 2, 'https://res.cloudinary.com/demo/video/upload/v1/samples/elephants.mp4', 5);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(601, 'Testes de Unidade com JUnit 5', 'Testando regras de negócio isoladas', 1, 'https://res.cloudinary.com/demo/video/upload/v1/samples/sea-turtle.mp4', 6),
+(602, 'Mockando Repositórios com Mockito', 'Simulando o banco de dados nos testes', 2, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 6);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(701, 'Adicionando a dependência Springdoc', 'Configuração inicial do OpenApi', 1, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 7),
+(702, 'Anotações de Documentação', 'Descrevendo parâmetros e retornos', 2, 'https://res.cloudinary.com/demo/video/upload/v1631526437/dog.mp4', 7);
+
+insert into aula (id, titulo, descricao, ordem, url_video, modulo_id) values 
+(801, 'Dockerizando a aplicação', 'Criando o Dockerfile e a imagem', 1, 'https://res.cloudinary.com/demo/video/upload/v1/samples/elephants.mp4', 8),
+(802, 'Deploy no Heroku ou AWS', 'Configurando variáveis de ambiente remotas', 2, 'https://res.cloudinary.com/demo/video/upload/v1/samples/sea-turtle.mp4', 8);
 
 insert into oauth2_registered_client
 (id, client_id, client_id_issued_at, client_secret, client_secret_expires_at, client_name, client_authentication_methods, authorization_grant_types, redirect_uris, post_logout_redirect_uris, scopes, client_settings, token_settings)
